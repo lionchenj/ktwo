@@ -1,0 +1,19 @@
+.titleDate{
+    text-align: center;
+    font-size: .23rem;
+    margin-top: 1.1rem;
+}
+.titleDate2{
+    text-align: center;
+    font-size: .23rem;
+    margin-top: .65rem;
+}
+.titleMessage{
+    text-align: center;
+    font-size: .14rem;
+    margin-top: .3rem;
+}
+.handlock{
+    width: 100%;
+    height: 3.75rem;
+}

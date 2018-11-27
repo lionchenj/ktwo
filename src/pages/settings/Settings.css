@@ -1,0 +1,17 @@
+.fans-footer {
+  margin-top: 1rem;
+  margin-left: 0.3rem;
+  margin-right: 0.3rem;
+}
+.fans-footer a {
+  background: #00153e;
+  color: #ffffff;
+}
+.forgetT-link {
+    background-color: transparent;
+    border: none;
+  text-align: right;
+  width: 90%;
+  display: block;
+  font-size: 0.14rem;
+}
