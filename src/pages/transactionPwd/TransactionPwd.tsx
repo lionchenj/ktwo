@@ -5,7 +5,7 @@ import { History } from "history";
 import { UserService } from '../../service/UserService';
 import { Util } from '../../utils/Util';
 import { UIUtil } from "../../utils/UIUtil";
-import { Redirect, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // import "./UpdatePwd.css"
 
@@ -15,7 +15,6 @@ interface TransactionPwdProps {
 
 interface TransactionPwdState {
     codeCountDown: number,
-    redirectToLogin: boolean,
     isTP:boolean
 }
 
@@ -32,7 +31,6 @@ export class TransactionPwd extends React.Component<TransactionPwdProps, Transac
         this.state = {
             isTP:true,
             codeCountDown: 0,
-            redirectToLogin: false
         }
     }
     public componentDidMount() {
@@ -126,13 +124,7 @@ export class TransactionPwd extends React.Component<TransactionPwdProps, Transac
         }
         UserService.Instance.gesture_password(trimPassword, trimConfrimPassword).then( () => {
             const alert = Modal.alert
-            alert('提示','修改交易密码成功，请重新登录',[{ text:'ok', style: 'default', onPress: () => {
-                this.setState({
-                    ...this.state,
-                    redirectToLogin: true
-                })
-            }
-            }])
+            alert('提示','修改交易密码成功')
             
         }).catch( err => {
             const message = (err as Error).message
@@ -142,14 +134,6 @@ export class TransactionPwd extends React.Component<TransactionPwdProps, Transac
     }
 
     public render() {
-        const { redirectToLogin} = this.state
-    
-        if (redirectToLogin) {
-            const to = {
-                pathname: "/login"
-            }
-            return <Redirect to={to} />
-        }
         return (
             <div className="fans-container">
                 <NavBar icon={<Icon type="left" />} 
@@ -173,10 +157,7 @@ export class TransactionPwd extends React.Component<TransactionPwdProps, Transac
                 
                     <InputItem type="password" placeholder="请再次输入交易密码" onBlur={this.onConfirmPasswordBlur}>再次输入</InputItem>
                 </List>
-                <List className={this.state.isTP?"content-item none":"content-item"}>
-                    <Link to="/transactionPwdForget" className="forgetT-link" >忘记交易密码</Link>
-                </List>
-                <WhiteSpace size="lg" />
+                <Link to="/transactionPwdForget" className={this.state.isTP?"forgetT-link none":"forgetT-link"}>忘记交易密码</Link>
                 <WhiteSpace size="lg" />
                 <div className={this.state.isTP?"fans-footer none":"fans-footer"}>
                     <Button className="login-button" onClick={this.onSubmit}>修改密码</Button>

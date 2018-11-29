@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { NavBar, Icon, List, InputItem, Button, WhiteSpace, WingBlank, Modal, Tabs, Picker, TextareaItem, Grid} from "antd-mobile";
+import { NavBar, Icon, List, InputItem, Button, WhiteSpace, WingBlank, Modal, Tabs, Picker, TextareaItem, Grid, Toast} from "antd-mobile";
 import { History } from "history";
 import "./Exchange.css"
 
@@ -153,20 +153,9 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
         this.voucher = value
     }
 
-    onRechange = (event: React.MouseEvent) => {
-        event.preventDefault()
-        const codeInfo = "请输入交易密码"
-        const numberInfo = "请输入数量"
-        if (!this.changeNumber) {
-            UIUtil.showInfo(numberInfo)
-            return
-        }
-        if (!this.gesturePasswords) {
-            UIUtil.showInfo(codeInfo)
-            return
-        }
+    onRechange = () => {
         UIUtil.showLoading("充币中")
-        UserService.Instance.rechange(this.state.selectedCoinId, this.changeNumber, this.voucher, this.gesturePasswords, this.state.radomCode).then( () => {
+        UserService.Instance.rechange(this.state.selectedCoinId, this.changeNumber, this.gesturePasswords, this.state.radomCode, this.voucher).then( () => {
             UIUtil.hideLoading();
             Modal.alert('提示','充币成功',[{ text:'ok',onPress: () => {
                 this.props.history.goBack()
@@ -178,16 +167,6 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
 
     onSubmit = (event: React.MouseEvent) => {
         event.preventDefault()
-        const codeInfo = "请输入验证码"
-        const numberInfo = "请输入数量"
-        if (!this.changeNumber) {
-            UIUtil.showInfo(numberInfo)
-            return
-        }
-        if (!this.gesturePasswords) {
-            UIUtil.showInfo(codeInfo)
-            return
-        }
         UIUtil.showLoading("转币中")
         UserService.Instance.exchange(this.state.selectedCoinId, this.gesturePasswords,this.activation_code, this.state.changeCoin, this.state.usables).then( () => {
             UIUtil.hideLoading();
@@ -266,6 +245,33 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
         
         this.onRadomCode();
     }
+    onCheckgesturePwd = (e:any) => {
+        let type = e.target.getAttribute("data-id");
+        if(type == '1'){
+            const numberInfo = "请输入数量"
+            if (!this.changeNumber) {
+                UIUtil.showInfo(numberInfo)
+                return
+            }
+        }else{
+            const numberInfo = "请输入数量"
+            if (!this.changeNumber) {
+                UIUtil.showInfo(numberInfo)
+                return
+            }
+        }
+        
+        UserService.Instance.check_gesture_password().then( (res:any)=> {
+            console.log(res)
+            if(res.errno == 0){
+                this.showKey();
+            }
+        }).catch( (err)=> {
+            const message = (err as Error).message;
+            Toast.fail(message);
+            this.props.history.push("/transactionPwd");
+        })
+    }
     //键盘事件
     showKey = () =>{
         this.setState({
@@ -282,6 +288,7 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
             this.setState({
                 showKey: false
             })
+            this.onRechange();
         }
         this.setState({
             gesturePassword:val
@@ -324,26 +331,15 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
                             </Picker>
                             <List className="change-list">
                                 <InputItem type="digit" onBlur={ this.onNumberBlur}>充币数量</InputItem>
-                            
                                 <InputItem type="text" value={this.state.address} onExtraClick={ this.copyAdd}>充币地址</InputItem>
-                            
                                 <InputItem type="text" value={this.state.radomCode} onExtraClick={ this.copyRadom}>随机码</InputItem>
-                            
-                                <div className="am-list-item am-input-item am-list-item-middle">
-                                    <div onClick={this.showKey} className="am-list-line">
-                                        <div className="am-input-label am-input-label-5">交易密码</div>
-                                        <div className="am-input-control">
-                                        {this.state.gesturePassword}
-                                        </div>
-                                    </div>
-                                </div>
                                 <InputItem disabled>备注</InputItem>
                                 <div className="textareaItem-body">
                                     <TextareaItem onBlur={ this.onVoucher} rows={5}/>
                                 </div>
                             </List>
                             <WhiteSpace size="lg" />
-                            <div className="address-footer-button-container-exchange"><Button onClick={this.onRechange} >确认</Button></div>
+                            <div className="address-footer-button-container-exchange"><Button data-id="1" onClick={this.onCheckgesturePwd} >确认</Button></div>
                             </WingBlank>
                         </div>
                         <div style={{height: bodyHeight, backgroundColor: '#f5f5f5' }}>
@@ -386,20 +382,12 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
                                         <div className="am-input-control">{this.state.changeCoin?this.state.changeCoin:("现有通证数" + (this.state.pageIndexData && this.state.pageIndexData.usable_user))}
                                         </div></div>
                                     </div>
-                                    <div className="am-list-item am-input-item am-list-item-middle">
-                                        <div onClick={this.showKey} className="am-list-line">
-                                            <div className="am-input-label am-input-label-5">交易密码</div>
-                                            <div className="am-input-control">
-                                            {this.state.gesturePassword}
-                                            </div>
-                                        </div>
-                                    </div>
                                 </List>
                                 <WhiteSpace size="lg" />
                                 <WhiteSpace size="lg" />
                                 <WhiteSpace size="lg" />
                                 <WhiteSpace size="lg" />
-                                <div className="address-footer-button-container-exchange"><Button onClick={this.onSubmit} >兑换</Button></div>
+                                <div className="address-footer-button-container-exchange"><Button data-id="2" onClick={this.onCheckgesturePwd} >兑换</Button></div>
                             </WingBlank>
                         </div>
                     </Tabs>

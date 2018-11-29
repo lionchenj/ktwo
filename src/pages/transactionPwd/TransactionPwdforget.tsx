@@ -5,9 +5,6 @@ import { History } from "history";
 import { UserService } from '../../service/UserService';
 import { Util } from '../../utils/Util';
 import { UIUtil } from "../../utils/UIUtil";
-import { Redirect } from "react-router-dom";
-
-// import "./UpdatePwd.css"
 
 interface TransactionPwdForgetProps {
     history: History
@@ -15,7 +12,6 @@ interface TransactionPwdForgetProps {
 
 interface TransactionPwdForgetState {
     codeCountDown: number,
-    redirectToLogin: boolean,
     changeL:boolean
 }
 
@@ -32,7 +28,6 @@ export class TransactionPwdForget extends React.Component<TransactionPwdForgetPr
         this.state = {
             changeL:true,
             codeCountDown: 0,
-            redirectToLogin: false
         }
     }
     onRedirectBack = () => {
@@ -131,13 +126,7 @@ export class TransactionPwdForget extends React.Component<TransactionPwdForgetPr
         }
         UserService.Instance.updatePassword(trimPhone, trimCode, trimPassword, trimConfrimPassword).then( () => {
             const alert = Modal.alert
-            alert('提示','修改密码成功，请重新登录',[{ text:'ok', style: 'default', onPress: () => {
-                this.setState({
-                    ...this.state,
-                    redirectToLogin: true
-                })
-            }
-            }])
+            alert('提示','修改密码成功')
             
         }).catch( err => {
             const message = (err as Error).message
@@ -147,14 +136,6 @@ export class TransactionPwdForget extends React.Component<TransactionPwdForgetPr
     }
 
     public render() {
-        const { redirectToLogin} = this.state
-    
-        if (redirectToLogin) {
-            const to = {
-                pathname: "/login"
-            }
-            return <Redirect to={to} />
-        }
         return (
             <div className="">
                 <NavBar icon={<Icon type="left" />} 

@@ -32,17 +32,17 @@ import { WithdrawHistory } from "./pages/withdrawHistory/WithdrawHistory";
 import { DepositHistory } from "./pages/depositHistory/DepositHistory";
 import { ChangeHistory } from "./pages/changeHistory/ChangeHistory";
 import { MessageDetail } from "./pages/messageDetail/MessageDetail";
-
-const NotFound = () => (
-  <div> Sorry, this page does not exist. </div>
-)
 let touch = window.localStorage.getItem('gesture');
+let touchPwd = window.localStorage.getItem("touchpwd");
+// const NotFound = () => (
+//   <div> Sorry, this page does not exist. </div>
+// )
 class App extends React.Component {
 
   public render() {
     return (
       <Switch>
-          <PrivateRoute exact path="/" component={touch=='0'?Home:TouchPwd} />
+          <PrivateRoute exact path="/" component={touchPwd&&touch=='1'?TouchPwd:Home} />
           <PrivateRoute exact path="/home" component={Home} />
           <Route path="/login"  component={Login} />
           <Route path="/register"  component={Register} />
@@ -72,7 +72,7 @@ class App extends React.Component {
           <PrivateRoute path="/depositHistory" component={DepositHistory} />
           <PrivateRoute path="/changeHistory" component={ChangeHistory} />
           <PrivateRoute path="/messageDetail" component={MessageDetail} />
-          <Route component={NotFound} />
+          <Route component={touch=='0'?Home:TouchPwd} />
       </Switch>
     );
   }

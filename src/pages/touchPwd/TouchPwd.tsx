@@ -7,7 +7,6 @@ import { UIUtil } from '../../utils/UIUtil';
 import { Util } from '../../utils/Util';
 var password = window.localStorage.getItem("checkpwd");
 var updata = '';
-var status = true//true:修改，false:首次新增
 
 interface TouchPwdProps {
   history: History;
@@ -17,6 +16,7 @@ interface TouchPwdProps {
 interface TouchPwdState {
   message: string;
   nowDate: string;
+  status: boolean
 }
 export class TouchPwd extends React.Component<TouchPwdProps, TouchPwdState> {
   newPwd:any
@@ -25,6 +25,7 @@ export class TouchPwd extends React.Component<TouchPwdProps, TouchPwdState> {
     this.state = {
         nowDate: Util.formatDate('1',4),
         message: "请输手势密码",
+        status: true //true:修改，false:首次新增
     };
   }
   onRedirectBack = () => {
@@ -33,11 +34,13 @@ export class TouchPwd extends React.Component<TouchPwdProps, TouchPwdState> {
 }
   public componentDidMount() {
     updata = this.props.location.state&&this.props.location.state.updata || '';
+    let statusStart = true;
     if(!password || updata == '1'){
-      status = false
-        this.setState({
-            message:"请输新手势密码"
-        })
+      this.setState({
+        message:"请输新手势密码",
+        status: false
+      })
+      statusStart = false
     }
     let that = this;
     var locker = new HandLock.Locker({
@@ -85,18 +88,19 @@ export class TouchPwd extends React.Component<TouchPwdProps, TouchPwdState> {
             console.log(res.err); //密码长度太短或者两次密码输入不一致
             locker.clearPath();
         } else {
-            window.localStorage.setItem("checkpwd", res.records);
+            UIUtil.showInfo("更新成功")
+            that.newPwd = that.changeStr(res.records);
             console.log(`密码更新完成，新密码是：${res.records}`);
             console.log(that.changeStr(res.records));
-            UIUtil.showInfo("修改成功")
-            that.newPwd = that.changeStr(res.records);
+            window.localStorage.setItem('gesture',"1");
             window.localStorage.setItem("touchpwd", that.newPwd);
-            that.props.history.goBack()
+            window.localStorage.setItem("checkpwd", res.records);
+            that.props.history.push('/home')
           }
         }
       }
     });
-    if(status){
+    if(statusStart){
         console.log('check')
         locker.check(password);
     }else{
@@ -159,9 +163,9 @@ export class TouchPwd extends React.Component<TouchPwdProps, TouchPwdState> {
     return (
       <div>
         {
-          status?<div/>:<NavBar mode="light" icon={<Icon type="left" />} onLeftClick={ this.onRedirectBack} className="home-navbar" >修改手势密码</NavBar>
+          this.state.status?<div/>:<NavBar mode="light" icon={<Icon type="left" />} onLeftClick={ this.onRedirectBack} className="home-navbar" >{this.state.status?'新增手势密码':'修改手势密码'}</NavBar>
         }
-        <div className={status?"titleDate":"titleDate2"}>{this.state.nowDate}</div>
+        <div className={this.state.status?"titleDate":"titleDate2"}>{this.state.nowDate}</div>
         <div className="titleMessage">{this.state.message}</div>
         <div className="handlock" id="handlock" />
       </div>

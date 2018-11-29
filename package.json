@@ -49,10 +49,10 @@
     "style-loader": "^0.22.1",
     "typescript": "^2.9.2"
   },
-  "homepage": "https://www.bst123456.com",
+  "homepage": "http://dev110.weibanker.cn/chenjj/www/ktwo/build",
   "proxy": {
     "/shadow/vatc/*": {
-      "target": "https://www.bst123456.com",
+      "target": "http://dev110.weibanker.cn/chenjj/www/ktwo/build",
       "secure": false,
       "changeOrigin": true
     }

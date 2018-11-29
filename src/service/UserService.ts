@@ -251,7 +251,7 @@ export class UserService extends ServiceBase {
         return await this.httpPost("exchange", params)
     }
     //充币
-    public async rechange(coinId: string, giveNumber: string, voucher:string, code: string, random:string): Promise<void> {
+    public async rechange(coinId: string, giveNumber: string, code: string, random:string, voucher?:string): Promise<void> {
         const params = {
             coin_id: coinId,
             number: giveNumber,

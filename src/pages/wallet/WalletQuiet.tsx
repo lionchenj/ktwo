@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { NavBar, Icon, List, InputItem, Button, WhiteSpace, Modal, Tabs, WingBlank, Picker } from "antd-mobile";
+import { NavBar, Icon, List, InputItem, Button, WhiteSpace, Modal, Tabs, WingBlank, Picker, Toast } from "antd-mobile";
 import { History } from "history";
 import { UserService } from '../../service/UserService';
 import { UIUtil } from '../../utils/UIUtil';
@@ -32,7 +32,7 @@ interface WalletQuietState {
     service_charge:string,
     assets_static_min:string,
     assets_static_max:string,
-
+    isTP:boolean
 }
 const tabs = [
     { title: '静态通证' },
@@ -55,6 +55,7 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
     address: string
     gesturePasswords:string
     interva:any
+    type:string
     constructor(props: WalletQuietProps) {
         super(props)
         this.codeCountDownTimer = 0
@@ -76,7 +77,8 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
             showKey:false,
             service_charge:'0',
             assets_static_min:'0',
-            assets_static_max:'0'
+            assets_static_max:'0',
+            isTP:true
         }
     }
 
@@ -85,7 +87,6 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
         history.goBack()
     }
 
-    
     onNumberBlur = (value: string) => {
         this.WalletQuietNumber = value;
         console.log(value)
@@ -116,16 +117,6 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
         this.activate = value
     }
     onActivate = () => {
-        const codeInfo = "请输入交易密码"
-        const numberInfo = "请输入数量"
-        if (!this.WalletQuietNumber) {
-            UIUtil.showInfo(numberInfo)
-            return
-        }
-        if (!this.state.gesturePassword) {
-            UIUtil.showInfo(codeInfo)
-            return
-        }
         UIUtil.showLoading("复投中");
         UserService.Instance.activate_static(this.WalletQuietNumber, this.state.gesturePassword, this.activate, this.state.service).then(() => {
             UIUtil.hideLoading();
@@ -138,24 +129,7 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
             UIUtil.showError(err)
         })
     }
-    onSubmit = (event: React.MouseEvent) => {
-        event.preventDefault()
-
-        const codeInfo = "请输入交易密码"
-        const numberInfo = "请输入数量"
-        const add = "请输入提现地址"
-        if (!this.address) {
-            UIUtil.showInfo(add)
-            return
-        }
-        if (!this.WalletQuietNumber) {
-            UIUtil.showInfo(numberInfo)
-            return
-        }
-        if (!this.state.gesturePassword) {
-            UIUtil.showInfo(codeInfo)
-            return
-        }
+    onSubmit = () => {
         UIUtil.showLoading("提取中");
         UserService.Instance.assets_static(this.state.selectedCoinId, this.state.changeCoin, this.WalletQuietNumber, this.state.gesturePassword, this.address, this.state.service).then(() => {
             UIUtil.hideLoading();
@@ -167,7 +141,79 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
         }).catch(err => {
             UIUtil.showError(err)
         })
-
+    }
+    onCheckgesturePwd = (e:any) => {
+        let type = e.target.getAttribute("data-id");
+        console.log('type:'+type)
+        if(type == '1'){
+            const activateInfo = "请输入激活码"
+            if (!this.activate) {
+                UIUtil.showInfo(activateInfo)
+                return
+            }
+            const numberInfo = "请输入数量"
+            if (!this.WalletQuietNumber) {
+                UIUtil.showInfo(numberInfo)
+                return
+            }
+        }else{
+            const numberInfo = "请输入数量"
+            if (!this.WalletQuietNumber) {
+                UIUtil.showInfo(numberInfo)
+                return
+            }
+            const add = "请输入提现地址"
+            if (!this.address) {
+                UIUtil.showInfo(add)
+                return
+            }
+        }
+        UserService.Instance.check_gesture_password().then( (res:any)=> {
+            console.log(res)
+            if(res.errno == 0){
+                this.type = type;
+                this.showKey();
+            }
+        }).catch( (err)=> {
+            const message = (err as Error).message;
+            Toast.fail(message);
+            this.props.history.push("/transactionPwd");
+        })
+    }
+    //键盘事件
+    showKey = () =>{
+        this.setState({
+            gesturePassword:'',
+            showKey: true
+        })
+        this.gesturePasswords = ''
+    }
+    numberClick = (event: any) => {
+        console.log(event)
+        let val = this.gesturePasswords + event.target.innerHTML ;
+        this.gesturePasswords = val;
+        if(val.length>5){
+            this.setState({
+                showKey: false
+            });
+            if(this.type == '1'){
+                this.onActivate();
+            }else{
+                this.onSubmit();
+            }
+        }
+        this.setState({
+            gesturePassword:val
+        })
+    }
+    delClick = () => {
+        console.log('1')
+        let val = this.gesturePasswords.substring(0,this.gesturePasswords.length-1)
+        console.log(val)
+        this.gesturePasswords = val;
+        this.setState({
+            gesturePassword:val
+        })
     }
     log = (name: string) => {
         return (value: number) => {
@@ -247,36 +293,6 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
             console.log(this.state.CoinData)
         })
     }
-    //键盘事件
-    showKey = () =>{
-        this.setState({
-            gesturePassword:'',
-            showKey: true
-        })
-        this.gesturePasswords = ''
-    }
-    numberClick = (event: any) => {
-        console.log(event)
-        let val = this.gesturePasswords + event.target.innerHTML ;
-        this.gesturePasswords = val;
-        if(val.length>5){
-            this.setState({
-                showKey: false
-            })
-        }
-        this.setState({
-            gesturePassword:val
-        })
-    }
-    delClick = () => {
-        console.log('1')
-        let val = this.gesturePasswords.substring(0,this.gesturePasswords.length-1)
-        console.log(val)
-        this.gesturePasswords = val;
-        this.setState({
-            gesturePassword:val
-        })
-    }
 
     public render() {
         return (
@@ -315,16 +331,6 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
                                 <InputItem placeholder="请输入通证数量" type="number" onBlur={this.onNumberBlur}></InputItem>
                             </List>
                             <WhiteSpace size="lg" />
-                            <List className="wallet-list">
-                                <div className="am-list-item am-input-item am-list-item-middle">
-                                    <div onClick={this.showKey} className="am-list-line">
-                                        <div className="am-input-label am-input-label-5">交易密码</div>
-                                        <div className="am-input-control">
-                                        {this.state.gesturePassword}
-                                        </div>
-                                    </div>
-                                </div>
-                            </List>
                             <WhiteSpace size="lg" />
                             {/* <div className='wallet-list-title'>矿工费</div>
                             <List className="wallet-list">
@@ -349,7 +355,7 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
                             </List> */}
                             <WhiteSpace size="xl" />
                             <WhiteSpace size="xl" />
-                            <div className="fans-footer"><Button onClick={this.onActivate}>确认</Button></div>
+                            <div className="fans-footer"><Button data-id="1" onClick={this.onCheckgesturePwd}>确认</Button></div>
                         </WingBlank>
                     </div>
                     <div style={{ height: bodyHeight, backgroundColor: '#f5f5f5' }}>
@@ -374,16 +380,6 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
                                 <InputItem labelNumber={6} placeholder="请输入钱包地址" type="text" onBlur={this.onAddressBlur}></InputItem>
                             </List>
                             <WhiteSpace size="lg" />
-                            <List className="wallet-list">
-                                <div className="am-list-item am-input-item am-list-item-middle">
-                                    <div onClick={this.showKey} className="am-list-line">
-                                        <div className="am-input-label am-input-label-5">交易密码</div>
-                                        <div className="am-input-control">
-                                        {this.state.gesturePassword}
-                                        </div>
-                                    </div>
-                                </div>
-                            </List>
                             <WhiteSpace size="lg" />
                             {/* <div className='wallet-list-title'>矿工费</div>
                             <List className="wallet-list">
@@ -408,7 +404,7 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
                             </List> */}
                             <WhiteSpace size="xl" />
                             <WhiteSpace size="xl" />
-                            <div className="fans-footer"><Button onClick={this.onSubmit}>确认</Button></div>
+                            <div className="fans-footer"><Button data-id="2" onClick={this.onCheckgesturePwd}>确认</Button></div>
                         </WingBlank>
                     </div>
                 </Tabs>

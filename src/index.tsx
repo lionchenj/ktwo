@@ -11,4 +11,5 @@ ReactDOM.render(
   </BrowserRouter>,
   document.getElementById('root') as HTMLElement
 );
+window.localStorage.setItem('gesture','0')
 registerServiceWorker();

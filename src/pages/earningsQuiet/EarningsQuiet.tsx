@@ -101,7 +101,7 @@ export class EarningsQuiet extends React.Component<EarningsQuietProps, EarningsQ
           const row = (rowData: model.ProfitItem, sectionID: number, rowID: number) => {
             return (
                 <List.Item multipleLine extra={rowData.number} >
-                昨日收益 <List.Item.Brief>{rowData.time}</List.Item.Brief>
+                静态收益 <List.Item.Brief>{rowData.time}</List.Item.Brief>
                 </List.Item>
   
             );

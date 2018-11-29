@@ -8,10 +8,11 @@
   color: #ffffff;
 }
 .forgetT-link {
-    background-color: transparent;
-    border: none;
+  background-color: transparent;
+  border: none;
   text-align: right;
   width: 90%;
   display: block;
   font-size: 0.14rem;
+  margin-top: .1rem;
 }

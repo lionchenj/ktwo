@@ -6,8 +6,8 @@ import { History } from "history";
 
 import "./Earnings.css"
 
-import iconFilterAll  from "../../assets/filter_all.png"
-import iconFilterSpeed from "../../assets/filter_speed.png"
+// import iconFilterAll  from "../../assets/filter_all.png"
+// import iconFilterSpeed from "../../assets/filter_speed.png"
 import iconFilterManage from "../../assets/filter_manage.png"
 import iconFilterRecoment from "../../assets/filter_recoment.png"
 import { UserService } from '../../service/UserService';
@@ -17,19 +17,14 @@ interface EarningsProps {
     history: History
 }
 
-
 interface EarningsState {
     dataSource: any,
     isLoading: boolean,
     hasMore: boolean,
     height: number,
     visible: boolean,
-    selectedEarningStyle?: "1"|"2"|"3"
+    selectedEarningStyle: string
 }
-
-
-
-
 
 export class Earnings extends React.Component<EarningsProps, EarningsState> {
     rData: any
@@ -48,7 +43,8 @@ export class Earnings extends React.Component<EarningsProps, EarningsState> {
             isLoading: true,
             hasMore: false,
             height:  document.documentElement.clientHeight - 200,
-            visible: false
+            visible: false,
+            selectedEarningStyle: '1'
           };
         
     }
@@ -128,9 +124,9 @@ export class Earnings extends React.Component<EarningsProps, EarningsState> {
                         <Popover 
                           visible={this.state.visible}
                           overlay={[
-                            (<Popover.Item icon={ <img src={iconFilterAll} className="am-icon am-icon-xs" alt="" /> } data-seed="logId">全部</Popover.Item>),
-                            (<Popover.Item key={"1"} icon={ <img src={iconFilterSpeed} className="am-icon am-icon-xs" alt="" /> }>加速返还</Popover.Item>),
-                            (<Popover.Item key={"2"} icon={ <img src={iconFilterManage} className="am-icon am-icon-xs" alt="" /> }>动态奖励</Popover.Item>),
+                            // (<Popover.Item icon={ <img src={iconFilterAll} className="am-icon am-icon-xs" alt="" /> } data-seed="logId">全部</Popover.Item>),
+                            // (<Popover.Item key={"1"} icon={ <img src={iconFilterSpeed} className="am-icon am-icon-xs" alt="" /> }>加速返还</Popover.Item>),
+                            (<Popover.Item key={"1"} icon={ <img src={iconFilterManage} className="am-icon am-icon-xs" alt="" /> }>动态奖励</Popover.Item>),
                             (<Popover.Item key={"3"} icon={ <img src={iconFilterRecoment} className="am-icon am-icon-xs" alt="" /> }>团队奖励</Popover.Item>),
                           ]}
                           onVisibleChange={this.handleVisibleChange}
@@ -199,7 +195,7 @@ export class Earnings extends React.Component<EarningsProps, EarningsState> {
       }
       switch(selectedType) {
         case "1":
-          title = "加速奖励"
+          title = "动态奖励"
           break
         case "2":
           title = "动态奖励"
@@ -208,7 +204,7 @@ export class Earnings extends React.Component<EarningsProps, EarningsState> {
           title = "团队奖励"
           break
         case "4":
-          title = "增值奖励"
+          title = "静态奖励"
           break
         case "5":
           title = "加速奖励"

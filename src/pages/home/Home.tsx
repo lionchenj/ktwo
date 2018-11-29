@@ -165,7 +165,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
         } else if (index == 1) {
             this.props.history.push("/change")
         } else if (index == 2) {
-            this.props.history.push("/customer")
+            window.location.href = "https://ziker-talk.yun.pingan.com/appIm?style=H5&channel=APPIM&authorizerAppid=appimc283aec44342e0a&eid=8b30534669fa6be7b9ff9fa790ff4c4e"
         } else if (index == 3) {
             UIUtil.showInfo("暂未开通")
         } else if (index == 4) {

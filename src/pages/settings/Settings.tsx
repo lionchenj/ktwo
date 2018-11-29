@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { NavBar, Icon, List, Button, Switch} from "antd-mobile";
+import { NavBar, Icon, List, Button, Switch, Modal} from "antd-mobile";
 import { Redirect } from "react-router-dom";
 import { History } from "history";
 import "./Settings.css"
@@ -67,10 +67,21 @@ export class Settings extends React.Component<SettingsProps, SettingsState> {
                     <List.Item thumb={iconGesture} extra={<Switch
                     checked={this.state.checkeds}
                     onClick={checked => {
-                        window.localStorage.setItem('gesture',checked ? "1" : "0");
-                        this.setState({
-                            checkeds : checked ? true : false
-                        })
+                        let pwd = window.localStorage.getItem("touchpwd");
+                        if(!pwd && checked){
+                            const alert = Modal.alert
+                            alert('提示','是否设置手势密码',[
+                                { text:'ok', onPress: () => {
+                                    this.props.history.push("/touchPwd")
+                                }},
+                                { text: 'Cancel', onPress: () => console.log('cancel') }
+                            ])
+                        }else{
+                            window.localStorage.setItem('gesture',checked ? "1" : "0");
+                            this.setState({
+                                checkeds : checked ? true : false
+                            })
+                        }
                       return false;
                     }}
                   />}>手势密码</List.Item>
