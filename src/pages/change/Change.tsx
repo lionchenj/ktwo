@@ -107,7 +107,7 @@ export class Change extends React.Component<ChangeProps, ChangeState> {
         this.props.history.push("/changeHistory")
     }
     public componentDidMount () {
-        const mobile = this.props.location.state.mobile;
+        const mobile = this.props.location.state&&this.props.location.state.mobile||'';
         if(mobile){
             this.setState({
                 phone : mobile,
@@ -178,7 +178,7 @@ export class Change extends React.Component<ChangeProps, ChangeState> {
         let thisMobile = window.localStorage.getItem('mobile');
         // const refUrl = `https://www.bst123456.com/change?mobile=${this.state.userInfo&&this.state.userInfo.mobile}`
         const refUrl = `http://dev110.weibanker.cn/chenjj/www/ktwo/build/index.html?change=change&mobile=${thisMobile}`
-        const mobile = this.props.location.state.mobile;
+        const mobile = this.props.location.state&&this.props.location.state.mobile||'';
 
         return (
             <div className="change-container">
