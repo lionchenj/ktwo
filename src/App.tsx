@@ -39,7 +39,6 @@ import { MessageDetail } from "./pages/messageDetail/MessageDetail";
 let touch = UserStorage.getCookie('gesture');
 let touchPwd = UserStorage.getCookie("touchpwd");
 const accessToken = UserStorage.getCookie("User.AccessTokenKey");
-alert(accessToken)
 // const NotFound = () => (
 //   <div> Sorry, this page does not exist. </div>
 // )

@@ -3,7 +3,6 @@ import { NavBar, Icon, List, Button, Switch, Modal} from "antd-mobile";
 import { Redirect } from "react-router-dom";
 import { History } from "history";
 import "./Settings.css"
-import { UserService } from '../../service/UserService';
 import { UserStorage } from "../../storage/UserStorage";
 
 import iconCode from "../../assets/setting_code.png"
@@ -29,7 +28,7 @@ export class Settings extends React.Component<SettingsProps, SettingsState> {
         super(props)
         this.state = {
             redirectToLogin: false,
-            checkeds: UserStorage.getCookie('gesture') == "1" ? true : false
+            checkeds: false
         }
     }
 
@@ -39,8 +38,9 @@ export class Settings extends React.Component<SettingsProps, SettingsState> {
     }
     
     onLogout = () => {
-        UserService.Instance.logout()
-
+        UserStorage.delCookie('User.AccessTokenKey');
+        UserStorage.delCookie('gesture');
+        UserStorage.delCookie("touchpwd");
         this.setState( {
             redirectToLogin: true
         })
@@ -67,7 +67,7 @@ export class Settings extends React.Component<SettingsProps, SettingsState> {
                     <List.Item thumb={iconLogpwd} arrow="horizontal" onClick={()=>{this.props.history.push("/update_pwd")}}>登陆密码</List.Item>
                     <List.Item thumb={iconTransaction} arrow="horizontal" onClick={()=>{this.props.history.push("/transactionPwd")}}>交易密码</List.Item>
                     <List.Item thumb={iconGesture} extra={<Switch
-                    checked={this.state.checkeds}
+                    checked={UserStorage.getCookie('gesture') == "1" ? true : false}
                     onClick={checked => {
                         let pwd = UserStorage.getCookie("touchpwd");
                         if(!pwd && checked){
