@@ -5,6 +5,7 @@ import App from './App';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 import { UserStorage } from "./storage/UserStorage";
+import appOut from "./utils/appOut";
 
 ReactDOM.render(
   <BrowserRouter>
@@ -14,3 +15,4 @@ ReactDOM.render(
 );
 UserStorage.setCookie('gesture','0')
 registerServiceWorker();
+appOut();

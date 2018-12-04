@@ -73,7 +73,7 @@ export abstract class ServiceBase {
             throw new Error(`服务器错误。(status:${resp.status},statusText:${resp.statusText})`)
         }
         const errCode: number = parseInt(resp.data.errno)
-        if (path!='getUserInfo'&&errCode !== 0) {
+        if (resp.data.errmsg!="access_token不合法或已过期"&&errCode !== 0) {
             const errMsg = resp.data.errmsg
             throw new ApiError(errCode, errMsg)
         }

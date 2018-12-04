@@ -2,7 +2,6 @@ const AccessTokenKey = "User.AccessTokenKey";
 
 export class UserStorage {
   static saveAccessToken(token: string) {
-      alert(token)
       this.setCookie(AccessTokenKey, token)
     UserStorage.setCookie(AccessTokenKey, token);
   }

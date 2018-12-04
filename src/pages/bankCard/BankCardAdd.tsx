@@ -63,17 +63,17 @@ export class BankCardAdd extends React.Component<BankCardAddProps, BankCardAddSt
                     className="home-navbar" >
                         <div className="nav-title">新增银行卡</div>
                 </NavBar>
-                    <List renderHeader={() => ''} className="content-item-border">
-                        <InputItem type="text" placeholder="请输入银行名" onBlur={this.onBankNameBlur}>银行名</InputItem>
-                    
-                        <InputItem type="digit" placeholder="请输入银行卡号" onBlur={this.onBankid}>银行卡号</InputItem>
-                    
-                    </List>
-                    <WhiteSpace size="lg" />
-                    <WhiteSpace size="lg" />
-                    <div className="fans-footer">
-                        <Button className="login-button" onClick={this.onSubmit}>提交新增</Button>
-                    </div>
+                <List renderHeader={() => ''} className="content-item-border">
+                    <InputItem type="text" placeholder="请输入银行名" onBlur={this.onBankNameBlur}>银行名</InputItem>
+                
+                    <InputItem type="digit" placeholder="请输入银行卡号" onBlur={this.onBankid}>银行卡号</InputItem>
+                
+                </List>
+                <WhiteSpace size="lg" />
+                <WhiteSpace size="lg" />
+                <div className="fans-footer">
+                    <Button className="login-button" onClick={this.onSubmit}>提交新增</Button>
+                </div>
             </div>
         )
     }

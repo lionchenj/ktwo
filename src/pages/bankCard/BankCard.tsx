@@ -81,6 +81,9 @@ export class BankCard extends React.Component<BankCardProps, BankCardState> {
                         onPress: () => {
                             UserService.Instance.deletePayment(rowData.account).then( (res:any) => {
                                 Modal.alert('提示', '删除成功');
+                                if(rowData.type == "2"){
+                                    UserStorage.delCookie('bankcard');
+                                }
                                 this.getBankCard();
                             }).catch( err => {
                                 const message = (err as Error).message
@@ -91,17 +94,20 @@ export class BankCard extends React.Component<BankCardProps, BankCardState> {
                         },
                     ]}
                     >
-                    <List.Item className={rowData.type=='1'?'':'ddress-footer-button-container'} extra={rowData.account} onClick={e => {
+                    <List.Item className={rowData.type=='1'?'':'ddress-footer-button-container'} extra={rowData.bank_name} onClick={e => {
+                        if('2' == rowData.type){
+                            return;
+                        }
                         UserService.Instance.defaultPayment(rowData.account).then( () => {
                             Modal.alert('设置默认卡成功', '卡号：'+rowData.account);
-                            UserStorage.setCookie('bankcard',rowData+'')
+                            UserStorage.setCookie('bankcard',rowData.account)
                             this.getBankCard();
                         }).catch( err => {
                             const message = (err as Error).message
                             Toast.fail(message)
                         })
                     }}>
-                        {rowData.type=='1'?'':'* '}{rowData.bank_name}
+                        {rowData.type=='1'?'':'* '}{rowData.account}
                     </List.Item>
                 </SwipeAction>
             );
@@ -114,9 +120,10 @@ export class BankCard extends React.Component<BankCardProps, BankCardState> {
                         <div key="1" className="bankcard-navbar-right" onClick={()=>this.props.history.push("/bankCardAdd")}>+</div>
                     ]}
                     className="home-navbar" >
-                        <div className="nav-title">忘记交易密码</div>
+                        <div className="nav-title">银行卡</div>
                 </NavBar>
-                <ListView
+                <div className="fans-list-view-container">
+                    <ListView
                             ref={el => this.lv = el}
                             dataSource={this.state.dataSource}
                             renderFooter={() => (<div style={{ padding: 30, textAlign: 'center' }}>
@@ -136,6 +143,7 @@ export class BankCard extends React.Component<BankCardProps, BankCardState> {
                                 overflow: 'auto',
                             }}
                         />
+                </div>
             </div>
         )
     }

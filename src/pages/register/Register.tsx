@@ -128,7 +128,13 @@ export class Register extends React.Component<Props, RegisterState> {
         })
         
     }
-
+    public componentDidMount() {
+        const mobile = this.props.location.state&&this.props.location.state.mobile||'';
+        console.log(mobile)
+        if (mobile) {
+            this.sharePhone = mobile
+        }
+    }
     getCode = () => {
         if (this.state.codeCountDown > 0) {
             return 
@@ -181,11 +187,7 @@ export class Register extends React.Component<Props, RegisterState> {
         if (query.mobile) {
             this.sharePhone = query.mobile
         }
-        const mobile = this.props.location.state.mobile;
-        console.log(mobile)
-        if (mobile) {
-            this.sharePhone = mobile
-        }
+        
         return (
             <div className="login-container">
                 <NavBar mode="light" icon={<Icon type="left" color="#fff" />} className="navbar" onLeftClick={this.navBack} ></NavBar>
@@ -203,22 +205,22 @@ export class Register extends React.Component<Props, RegisterState> {
                     </div>
                     <div className="content">
                         <List className="content-item-border">
-                            <InputItem name="phone" type="digit" maxLength={11}  placeholder={this.state.changeL?"请输入手机号":"Your phone number"} onBlur={this.onPhoneBlur}></InputItem>
+                            <InputItem name="phone" type="number" maxLength={11} placeholder={this.state.changeL?"请输入手机号":"Your phone number"} onBlur={this.onPhoneBlur}></InputItem>
                         </List>
                         <List className="content-item-border">
-                            <InputItem  type="number" placeholder={this.state.changeL?"请输入短信验证码":"SMS code"} onBlur={this.onCodeBlur}
+                            <InputItem  type="digit" placeholder={this.state.changeL?"请输入短信验证码":"SMS code"} onBlur={this.onCodeBlur}
                                 extra={<Button disabled={this.state.codeCountDown > 0} type="ghost" size="small" className="code-button" >{ this.state.codeCountDown > 0 ? this.state.codeCountDown: (this.state.changeL?"获取验证码":"Get code")}</Button>}
                                 onExtraClick={ this.state.codeCountDown > 0 ? undefined : this.getCode}>
                             </InputItem>
                         </List>
                         <List className="content-item-border">
-                            <InputItem type="text" maxLength={11} placeholder={this.state.changeL?"请输入激活码":"Activation coder"} onBlur={this.onActivationBlur} ></InputItem>
+                            <InputItem type="text" placeholder={this.state.changeL?"请输入激活码":"Activation coder"} onBlur={this.onActivationBlur} ></InputItem>
                         </List>
                         <List className="content-item-border">
                             <InputItem type="password" placeholder={this.state.changeL?"请输入登录密码":"Password"} onBlur={this.onPasswordBlur}></InputItem>
                         </List>
                         <List className="content-item-border">
-                            <InputItem type="phone" maxLength={11} placeholder={this.state.changeL?"请输入分享人手机号":"Phone number of the sharer"} onBlur={this.onSharePhoneBlur} defaultValue={mobile}></InputItem>
+                            <InputItem type="number" maxLength={11} placeholder={this.state.changeL?"请输入分享人手机号":"Phone number of the sharer"} onBlur={this.onSharePhoneBlur} defaultValue={this.sharePhone}></InputItem>
                         </List>
                         <div className="button">
                             <List className="content-item">

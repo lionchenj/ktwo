@@ -60,6 +60,7 @@ export class Wallet extends React.Component<WalletProps, WalletState> {
         super(props)
         this.codeCountDownTimer = 0
         this.gesturePasswords = ''
+        this.bankName = ''
         this.state = {
             assets_move: 0,
             selectedCoinId: "1",
@@ -268,12 +269,20 @@ export class Wallet extends React.Component<WalletProps, WalletState> {
             })
         })
         UserService.Instance.listPayment().then( (res:any) => {
+            if(res.data.length == 0){
+                this.props.history.push("/bankCardAdd")
+                return;
+            }
             res.data.map((bank:any)=>{
                 if(bank.type == '2'){
                     this.bankName = bank.bank_name;
                     this.bankId = bank.account;
                 }
             })
+            if(this.bankName == ''){
+                this.props.history.push("/bankCard")
+                return;
+            }
         }).catch( err => {
             const message = (err as Error).message
             Toast.fail(message)
@@ -378,7 +387,7 @@ export class Wallet extends React.Component<WalletProps, WalletState> {
                             </Picker>
                             <div className='wallet-list-title'>提现数量（可提取数量：<span>{this.state.assets_move}</span>）<span className="lr">手续费：<span>{this.state.service||0}</span></span></div>
                             <List className="change-list exchange">
-                                <InputItem placeholder={"最少可提取："+ this.state.assets_move_min +"，最多可提取：" + this.state.assets_move_max} type="phone" onBlur={this.onNumberBlur} ></InputItem>
+                                <InputItem placeholder={"最少可提取："+ this.state.assets_move_min +"，最多可提取：" + this.state.assets_move_max} type="number" onBlur={this.onNumberBlur} ></InputItem>
                             </List>
                             <WhiteSpace size="lg" />
                             <div className='wallet-list-title'>银行卡</div>

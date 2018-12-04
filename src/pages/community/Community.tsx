@@ -84,7 +84,7 @@ export class Community extends React.Component<AddressProps, AddressState> {
 
                 <List className="address-list">
                     <InputItem type="text"  placeholder="请输入您的姓名" onBlur={this.onNameBlur}>姓名</InputItem>
-                    <InputItem type="phone" placeholder="请输入您的手机" onBlur={this.onPhoneBlur}>手机</InputItem>
+                    <InputItem type="number" maxLength={11} placeholder="请输入您的手机" onBlur={this.onPhoneBlur}>手机</InputItem>
                     <InputItem type="text" placeholder="请输入您的身份证" onBlur={this.onIdCardBlur}>身份证</InputItem>
                 </List>
 

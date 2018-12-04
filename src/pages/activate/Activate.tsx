@@ -22,6 +22,7 @@ interface ActivateState {
     types:number,
     address:string,
     cardList:any
+    cardList10:boolean
 }
 
 
@@ -33,7 +34,8 @@ export class Activate extends React.Component<ActivateProps, ActivateState> {
         this.state = {
             address:'',
             types:3,
-            cardList:[]
+            cardList:[],
+            cardList10:false
         };
         
     }
@@ -59,6 +61,11 @@ export class Activate extends React.Component<ActivateProps, ActivateState> {
             this.setState({
                 cardList:res.data
             })
+            if(res.data.length == 10){
+                this.setState({
+                    cardList10:true
+                })
+            }
         }).catch( err => {
             UIUtil.showError(err)
         })
@@ -78,6 +85,11 @@ export class Activate extends React.Component<ActivateProps, ActivateState> {
             this.setState({
                 cardList:res.data
             })
+            if(res.data.length == 10){
+                this.setState({
+                    cardList10:true
+                })
+            }
         }).catch( err => {
             UIUtil.showError(err)
         })
@@ -141,7 +153,7 @@ export class Activate extends React.Component<ActivateProps, ActivateState> {
                                             )
                                         })
                                     }
-                                    <div className="fans-footer">
+                                    <div className={this.state.cardList10?"fans-footer none":"fans-footer"}>
                                         <Button onClick={this.getActivate} >生成激活码</Button>
                                     </div>
                                 </div>

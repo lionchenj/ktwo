@@ -260,6 +260,10 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
             })
         })
         UserService.Instance.listPayment().then( (res:any) => {
+            if(res.data.length == 0){
+                this.props.history.push("/bankCardAdd")
+                return;
+            }
             res.data.map((bank:any)=>{
                 if(bank.type == '2'){
                     this.bankName = bank.bank_name;

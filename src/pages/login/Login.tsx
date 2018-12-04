@@ -23,7 +23,8 @@ export interface LoginProps {
 interface LoginState {
     redirectToReferrer: boolean,
     redirectToRegister: boolean,
-    changeL: boolean
+    changeL: boolean,
+    activate: boolean
 }
 
 export class Login extends React.Component<LoginProps, LoginState> {
@@ -35,7 +36,8 @@ export class Login extends React.Component<LoginProps, LoginState> {
         this.state = {
             changeL: true,
             redirectToReferrer: false,
-            redirectToRegister: false
+            redirectToRegister: false,
+            activate: false
         }
     }
 
@@ -98,15 +100,20 @@ changeEn = () => {
             if(!pwd){
                 const alert = Modal.alert
                 alert('提示','是否设置手势密码',[
-                    { text:'ok', onPress: () => {
+                    { text:'设置', onPress: () => {
                         this.props.history.push("/touchPwd")
                     }},
-                    { text: 'Cancel', onPress: () => console.log('cancel') }
+                    { text: '跳过', onPress: () => UserStorage.setCookie('gesture','0') }
                 ])
             }
         }).catch( err => {
-            const message = (err as Error).message
-            Toast.fail(message)
+            const message = (err as Error).message;
+            Toast.fail(message);
+            if(message == "该账号需新的激活码才能登录"){
+                this.setState({
+                    activate: true
+                })
+            }
         })
     }
 
@@ -147,13 +154,13 @@ changeEn = () => {
                     </div> 
                     <div className="content">
                         <List className="content-item-border">
-                            <InputItem type="digit" maxLength={11} placeholder={this.state.changeL?"请输入手机号":"Your phone number"} onBlur={this.onPhoneBlur}></InputItem>
+                            <InputItem type="number" maxLength={11} placeholder={this.state.changeL?"请输入手机号":"Your phone number"} onBlur={this.onPhoneBlur}></InputItem>
                         </List>
                         <List className="content-item-border">
                             <InputItem type="password" placeholder={this.state.changeL?"请输入登录密码":"Password"} onBlur={this.onPasswordBlur}></InputItem>
                         </List>
-                        <List className="content-item-border none">
-                            <InputItem type="password" placeholder={this.state.changeL?"请输入激活码":"Activation coder"} onBlur={this.onActivationBlur}></InputItem>
+                        <List className={this.state.activate?"content-item-border":"content-item-border none"}>
+                            <InputItem type="text" placeholder={this.state.changeL?"请输入激活码":"Activation coder"} onBlur={this.onActivationBlur}></InputItem>
                         </List>
                         <List className="content-item">
                             <Link to="/forget_pwd" className="forget-link" >{this.state.changeL?"忘记密码":"Forgot password？"}</Link>
