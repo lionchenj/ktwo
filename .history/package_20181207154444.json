@@ -52,7 +52,7 @@
   "homepage": "http://dev170.weibanker.cn/chenjj/www/ktwo/build",
   "proxy": {
     "/shadow/vatc/*": {
-      "target": "http://dev170.weibanker.cn/chenjj/www/ktwo/build",
+      "target": "http://dev110.weibanker.cn/chenjj/www/ktwo/build",
       "secure": false,
       "changeOrigin": true
     }
