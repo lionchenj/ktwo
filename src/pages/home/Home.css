@@ -38,7 +38,7 @@
     justify-content:space-between;
 }
 .home-top-box-body{
-    padding-top: 1rem;
+    padding-top: 1.4rem;
 }
 .home-top-box{
     width: 100%;
@@ -47,7 +47,7 @@
     align-items: center;
     text-align: center;
     color: #FFFFFF;
-    padding-top: .1rem;
+    padding-top: .2rem;
 }
 .home-top-item{
     width: 33.33%;
@@ -250,7 +250,7 @@ a.am-button.code-button.am-button-ghost.am-button-small.am-button-disabled{
     background: #f5f5f5;
 }
 .profile-header {
-    height: 2.25rem;
+    height: 3rem;
     width: 100%;
     background-image: url(../../assets/my_bg.png);
     background-repeat: no-repeat;
