@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { NavBar, Icon, List, InputItem, Button, WhiteSpace, Modal, Tabs, WingBlank, Picker, Toast } from "antd-mobile";
+import { NavBar, Icon, List, InputItem, Button, WhiteSpace, Modal, Tabs, WingBlank, Picker, Toast, Grid } from "antd-mobile";
 import { History } from "history";
 import { UserService } from '../../service/UserService';
 import { UIUtil } from '../../utils/UIUtil';
@@ -30,13 +30,31 @@ interface WalletState {
     showKey:boolean,
     service_charge:string,
     assets_move_max:string,
-    assets_move_min:string
+    assets_move_min:string,
+    ftNumber:string
 }
 const tabs = [
     { title: '动态通证' },
     { title: '复投' },
     { title: '提现申请' },
 ];
+const exChangeAmount = [
+    {
+    text:'1000'
+    },{
+    text:'3000'
+    },{
+    text:'5000'
+    },{
+    text:'10000'
+    },{
+    text:'20000'
+    },{
+    text:'30000'
+    },{
+    text:'50000'
+    }
+]
 // const CustomChildren = (props: any) => (
 //     <div style={{ backgroundColor: '#fff', paddingLeft: 15 }}>
 //         <div className="test" style={{ display: 'flex', height: '45px', lineHeight: '45px' }}>
@@ -77,7 +95,8 @@ export class Wallet extends React.Component<WalletProps, WalletState> {
             showKey:false,
             service_charge:'0',
             assets_move_max:'0',
-            assets_move_min:'0'
+            assets_move_min:'0',
+            ftNumber:'0'
         }
     }
 
@@ -105,7 +124,7 @@ export class Wallet extends React.Component<WalletProps, WalletState> {
     //复投
     onActivate = () => {
         UIUtil.showLoading("复投中");
-        UserService.Instance.activate_move(this.WalletNumber, this.gesturePasswords, this.activate, this.state.service).then(() => {
+        UserService.Instance.activate_move(this.state.ftNumber, this.gesturePasswords, this.activate, this.state.service).then(() => {
             UIUtil.hideLoading();
             Modal.alert('提示', '复投成功', [{
                 text: 'ok', onPress: () => {
@@ -142,7 +161,7 @@ export class Wallet extends React.Component<WalletProps, WalletState> {
                 return
             }
             const numberInfo = "请输入数量"
-            if (!this.WalletNumber) {
+            if (!this.state.ftNumber) {
                 UIUtil.showInfo(numberInfo)
                 return
             }
@@ -251,6 +270,12 @@ export class Wallet extends React.Component<WalletProps, WalletState> {
             })
         })
     }
+    setUsable = (e:any) =>{
+        console.log(e)
+        this.setState({
+            ftNumber : e.target.innerText
+        })
+    }
     public componentDidMount() {
         UserService.Instance.pageIndex().then(pageIndexData => {
             this.setState({
@@ -342,9 +367,30 @@ export class Wallet extends React.Component<WalletProps, WalletState> {
                             </List>
                             <WhiteSpace size="lg" />
                             <div className='wallet-list-title'>选择复投通证数量（可复投通证数量：<span>{this.state.servicemax}</span>）</div>
-                            <List className="wallet-list">
+                            <div className="am-list-item am-input-item am-list-item-middle">
+                                <div className="am-list-line"><div className="am-input-label am-input-label-7">复投数量</div>
+                                <div className="am-input-control">{this.state.ftNumber}
+                                </div></div>
+                            </div>
+                            <Grid className="exchange" square={false} data={exChangeAmount} hasLine={false}  columnNum={4}
+                                renderItem={(dataItem:any) => (
+                                    <div style={{margin: "0 .1rem"}}>
+                                        {
+                                        dataItem.text>10000?
+                                        <div style={{ textAlign:'center', padding: '.08rem 0.1rem', borderRadius: '.05rem', color: '#D1D1D1', fontSize: '14px', marginTop: '12px',border: '1px solid #D1D1D1' }}>
+                                            {dataItem.text}
+                                        </div>
+                                        :
+                                        <div onClick={this.setUsable} style={{ textAlign:'center', padding: '.08rem 0.1rem', borderRadius: '.05rem', color: '#4A90E2', fontSize: '14px', marginTop: '12px',border: '1px solid #4A90E2' }}>
+                                            {dataItem.text}
+                                        </div>
+                                    }
+                                    </div>
+                                    )}
+                                ></Grid>
+                            {/* <List className="wallet-list">
                                 <InputItem placeholder="请输入通证数量" type="number" onBlur={this.onNumberBlur}></InputItem>
-                            </List>
+                            </List> */}
                             <WhiteSpace size="lg" />
                             <WhiteSpace size="lg" />
                             {/* <div className='wallet-list-title'>矿工费</div>

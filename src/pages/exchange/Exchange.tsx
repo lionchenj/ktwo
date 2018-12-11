@@ -76,6 +76,7 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
     voucher: string
     gesturePasswords:string
     interva:any
+    onType:number
     constructor(props: ChangeProps) {
         super(props)
         this.gesturePasswords = ''
@@ -165,8 +166,7 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
         })
     }
 
-    onSubmit = (event: React.MouseEvent) => {
-        event.preventDefault()
+    onSubmit = () => {
         UIUtil.showLoading("转币中")
         UserService.Instance.exchange(this.state.selectedCoinId, this.gesturePasswords,this.activation_code, this.state.changeCoin, this.state.usables).then( () => {
             UIUtil.hideLoading();
@@ -247,6 +247,7 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
     }
     onCheckgesturePwd = (e:any) => {
         let type = e.target.getAttribute("data-id");
+        this.onType = type;
         if(type == '1'){
             const numberInfo = "请输入数量"
             if (!this.changeNumber) {
@@ -255,12 +256,16 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
             }
         }else{
             const numberInfo = "请输入数量"
+            const codeInfo = "请输入激活码"
+            if (!this.activation_code) {
+                UIUtil.showInfo(codeInfo)
+                return
+            }
             if (!this.changeNumber) {
                 UIUtil.showInfo(numberInfo)
                 return
             }
         }
-        
         UserService.Instance.check_gesture_password().then( (res:any)=> {
             console.log(res)
             if(res.errno == 0){
@@ -288,7 +293,11 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
             this.setState({
                 showKey: false
             })
-            this.onRechange();
+            if(this.onType == 1){
+                this.onRechange();
+            }else{
+                this.onSubmit();
+            }
         }
         this.setState({
             gesturePassword:val
@@ -379,7 +388,7 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
                                     ></Grid>
                                     <div className="am-list-item am-input-item am-list-item-middle">
                                         <div className="am-list-line"><div className="am-input-label am-input-label-7">可兑换为通证数</div>
-                                        <div className="am-input-control">{this.state.changeCoin?this.state.changeCoin:("现有通证数" + (this.state.pageIndexData && this.state.pageIndexData.usable_user))}
+                                        <div className="am-input-control">{this.state.changeCoin?this.state.changeCoin:("现有通证数" + (this.state.pageIndexData && this.state.pageIndexData.usable_user)||'0')}
                                         </div></div>
                                     </div>
                                 </List>

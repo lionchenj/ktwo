@@ -203,7 +203,7 @@ export class Change extends React.Component<ChangeProps, ChangeState> {
                             <InputItem placeholder="请输入个数" type="number"
                                 onBlur={this.onNumberBlur}
                                 >转出通证个数</InputItem>
-                            <InputItem placeholder="请输入接收人手机号" value={this.state.phone} type="phone" onChange={this.onPhoneBlur} >收证人手机号</InputItem>
+                            <InputItem placeholder="请输入接收人手机号" value={this.state.phone} type="number" maxLength={11} onChange={this.onPhoneBlur} >收证人手机号</InputItem>
                             
                         </List>
                         <WhiteSpace size="lg" />

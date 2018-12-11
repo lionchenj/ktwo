@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { NavBar, Icon, List, InputItem, Button, WhiteSpace, Modal, Tabs, WingBlank, Picker, Toast } from "antd-mobile";
+import { NavBar, Icon, List, InputItem, Button, WhiteSpace, Modal, Tabs, WingBlank, Picker, Toast, Grid } from "antd-mobile";
 import { History } from "history";
 import { UserService } from '../../service/UserService';
 import { UIUtil } from '../../utils/UIUtil';
@@ -31,13 +31,31 @@ interface WalletQuietState {
     service_charge:string,
     assets_static_min:string,
     assets_static_max:string,
-    isTP:boolean
+    isTP:boolean,
+    ftNumber:string
 }
 const tabs = [
     { title: '静态通证' },
     { title: '复投' },
     { title: '提现申请' },
 ];
+const exChangeAmount = [
+    {
+    text:'1000'
+    },{
+    text:'3000'
+    },{
+    text:'5000'
+    },{
+    text:'10000'
+    },{
+    text:'20000'
+    },{
+    text:'30000'
+    },{
+    text:'50000'
+    }
+]
 // const CustomChildren = (props: any) => (
 //     <div style={{ backgroundColor: '#fff', paddingLeft: 15 }}>
 //         <div className="test" style={{ display: 'flex', height: '45px', lineHeight: '45px' }}>
@@ -77,7 +95,8 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
             service_charge:'0',
             assets_static_min:'0',
             assets_static_max:'0',
-            isTP:true
+            isTP:true,
+            ftNumber:'0'
         }
     }
 
@@ -114,7 +133,7 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
     }
     onActivate = () => {
         UIUtil.showLoading("复投中");
-        UserService.Instance.activate_static(this.WalletQuietNumber, this.state.gesturePassword, this.activate, this.state.service).then(() => {
+        UserService.Instance.activate_static(this.state.ftNumber, this.state.gesturePassword, this.activate, this.state.service).then(() => {
             UIUtil.hideLoading();
             Modal.alert('提示', '再种成功', [{
                 text: 'ok', onPress: () => {
@@ -148,7 +167,7 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
                 return
             }
             const numberInfo = "请输入数量"
-            if (!this.WalletQuietNumber) {
+            if (!this.state.ftNumber) {
                 UIUtil.showInfo(numberInfo)
                 return
             }
@@ -243,6 +262,12 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
             })
         })
     }
+    setUsable = (e:any) =>{
+        console.log(e)
+        this.setState({
+            ftNumber : e.target.innerText
+        })
+    }
     public componentDidMount() {
         UserService.Instance.pageIndex().then(pageIndexData => {
             this.setState({
@@ -333,10 +358,28 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
                                 <InputItem labelNumber={6} placeholder="请输入激活码" type="text" onBlur={this.onActivateBlur}>激活码</InputItem>
                             </List>
                             <WhiteSpace size="lg" />
-                            <div className='wallet-list-title'>选择复投通证数量（可复投通证数量：<span>{this.state.servicemax}</span>）</div>
-                            <List className="wallet-list">
-                                <InputItem placeholder="请输入通证数量" type="number" onBlur={this.onNumberBlur}></InputItem>
-                            </List>
+                            <div className='wallet-list-title'>选择复投通证数量（可复投通证数量：<span>{this.state.servicemax||'0'}</span>）</div>
+                            <div className="am-list-item am-input-item am-list-item-middle">
+                                <div className="am-list-line"><div className="am-input-label am-input-label-7">复投数量</div>
+                                <div className="am-input-control">{this.state.ftNumber}
+                                </div></div>
+                            </div>
+                            <Grid className="exchange" square={false} data={exChangeAmount} hasLine={false}  columnNum={4}
+                                renderItem={(dataItem:any) => (
+                                    <div style={{margin: "0 .1rem"}}>
+                                        {
+                                        dataItem.text>10000?
+                                        <div style={{ textAlign:'center', padding: '.08rem 0.1rem', borderRadius: '.05rem', color: '#D1D1D1', fontSize: '14px', marginTop: '12px',border: '1px solid #D1D1D1' }}>
+                                            {dataItem.text}
+                                        </div>
+                                        :
+                                        <div onClick={this.setUsable} style={{ textAlign:'center', padding: '.08rem 0.1rem', borderRadius: '.05rem', color: '#4A90E2', fontSize: '14px', marginTop: '12px',border: '1px solid #4A90E2' }}>
+                                            {dataItem.text}
+                                        </div>
+                                    }
+                                    </div>
+                                    )}
+                                ></Grid>
                             <WhiteSpace size="lg" />
                             <WhiteSpace size="lg" />
                             {/* <div className='wallet-list-title'>矿工费</div>
