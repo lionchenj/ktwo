@@ -104,11 +104,11 @@ export class Activate extends React.Component<ActivateProps, ActivateState> {
                 <NavBar mode="light" icon={<Icon type="left" />} onLeftClick={ this.onRedirectBack} className="home-navbar"> <div className="nav-title">代理激活</div></NavBar>
                 {(() => {
                     switch (this.state.types) {
+                        // case 0:
+                        //     return (
+                        //         <div className="activate-not">你还没成为我们的代理</div>
+                        //     )
                         case 0:
-                            return (
-                                <div className="activate-not">你还没成为我们的代理</div>
-                            )
-                        case 1:
                             return (
                                 <div>
                                     <List renderHeader={() => ''}>
@@ -119,7 +119,7 @@ export class Activate extends React.Component<ActivateProps, ActivateState> {
                                     </div>
                                 </div>
                             )
-                        case 3:
+                        case 1:
                             return (
                                 <div className="activate-php ">
                                     <div>我的代理人</div>

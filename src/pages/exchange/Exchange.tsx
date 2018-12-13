@@ -388,7 +388,7 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
                                     ></Grid>
                                     <div className="am-list-item am-input-item am-list-item-middle">
                                         <div className="am-list-line"><div className="am-input-label am-input-label-7">可兑换为通证数</div>
-                                        <div className="am-input-control">{this.state.changeCoin?this.state.changeCoin:("现有通证数" + (this.state.pageIndexData && this.state.pageIndexData.usable_user)||'0')}
+                                        <div className="am-input-control">{this.state.changeCoin?this.state.changeCoin:("现有通证数：" + (this.state.pageIndexData && this.state.pageIndexData.usable_static)||'0')}
                                         </div></div>
                                     </div>
                                 </List>

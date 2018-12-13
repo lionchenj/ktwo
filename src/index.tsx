@@ -13,6 +13,6 @@ ReactDOM.render(
   </BrowserRouter>,
   document.getElementById('root') as HTMLElement
 );
-UserStorage.setCookie('gesture','0')
+UserStorage.getCookie('gesture')?'':UserStorage.setCookie('gesture','0')
 registerServiceWorker();
 appOut();

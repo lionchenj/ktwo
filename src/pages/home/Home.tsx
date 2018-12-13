@@ -25,6 +25,9 @@ import iconTeam from "../../assets/icon_team.png"
 import iconMessage from "../../assets/icon_message.png"
 import iconShop from "../../assets/icon_shop.png"
 
+import banner1 from "../../assets/banner1.png"
+import banner2 from "../../assets/banner2.png"
+
 import { UserService } from '../../service/UserService';
 
 import { model } from '../../model/model';
@@ -551,13 +554,14 @@ export class Home extends React.Component<HomeProps, HomeState> {
             </div>)
           }
           let banners = [];
-          if(this.state.banners.length != 0 ){
-            for(let i of this.state.banners){
-                banners.push(<div><img className="banner-img" src={i.img_path} /></div>)
-            }
-          }else{
-            banners.push(<div><img className="banner-img" src={Banner} /></div>)
-          }
+        //   if(this.state.banners.length != 0 ){
+        //     for(let i of this.state.banners){
+        //         banners.push(<div><img className="banner-img" src={i.img_path} /></div>)
+        //     }
+        //   }else{
+            banners.push(<div><img className="banner-img" src={banner1} /></div>)
+            banners.push(<div><img className="banner-img" src={banner2} /></div>)
+        //   }
         return (
             <div className="home-container">
                 {/* <NavBar mode="light"  className="home-navbar" ><div className="nav-title">寳树通</div></NavBar> */}
@@ -591,8 +595,8 @@ export class Home extends React.Component<HomeProps, HomeState> {
                             >
                                 <div className="home-banner">
                                     <Carousel autoplay dots>
-                                        {/* {banners} */}
-                                        {this.state.banners.map((val:any, index:string) => (
+                                        {banners}
+                                        {/* {this.state.banners.map((val:any, index:string) => (
                                             <a
                                             key={index}
                                             href={val.link}
@@ -609,7 +613,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                                                 }}
                                             />
                                             </a>
-                                        ))}
+                                        ))} */}
                                     </Carousel>
                                 </div>
                                
