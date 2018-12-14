@@ -246,7 +246,7 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
         this.onRadomCode();
     }
     onCheckgesturePwd = (e:any) => {
-        let type = e.target.getAttribute("data-id");
+        let type = e.currentTarget.dataset.id;
         this.onType = type;
         if(type == '1'){
             const numberInfo = "请输入数量"

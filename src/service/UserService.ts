@@ -175,7 +175,7 @@ export class UserService extends ServiceBase {
         return await this.httpPost("activate_move", params, true)
     }
     //动态提现
-    public async assets_move(coin_id:string, coin_number:string, number: string,gesture_password:string, bankname:string, address:string, service:number): Promise<void> {
+    public async assets_move(coin_id:string, coin_number:string, number: string,gesture_password:string, address:string, service:number): Promise<void> {
         const params = {
             coin_id:coin_id,
             coin_number:coin_number,

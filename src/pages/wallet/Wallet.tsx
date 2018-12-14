@@ -31,7 +31,8 @@ interface WalletState {
     service_charge:string,
     assets_move_max:string,
     assets_move_min:string,
-    ftNumber:string
+    ftNumber:string,
+    address: string
 }
 const tabs = [
     { title: '动态通证' },
@@ -96,7 +97,8 @@ export class Wallet extends React.Component<WalletProps, WalletState> {
             service_charge:'0',
             assets_move_max:'0',
             assets_move_min:'0',
-            ftNumber:'0'
+            ftNumber:'0',
+            address: ''
         }
     }
 
@@ -104,7 +106,9 @@ export class Wallet extends React.Component<WalletProps, WalletState> {
         const history = this.props.history
         history.goBack()
     }
-
+    onAddressBlur = (value: string) => {
+            this.address = value
+    }
     onNumberBlur = (value: string) => {
         this.WalletNumber = value;
         let changeCoin = (parseFloat(value) / parseFloat(this.state.exchange_rate)) + '';
@@ -138,7 +142,8 @@ export class Wallet extends React.Component<WalletProps, WalletState> {
     //提现
     onSubmit = () => {
         UIUtil.showLoading("提取中");
-        UserService.Instance.assets_move(this.state.selectedCoinId, this.state.changeCoin, this.WalletNumber, this.gesturePasswords, this.bankName, this.bankId, this.state.service).then(() => {
+        UserService.Instance.assets_move(this.state.selectedCoinId, this.state.changeCoin, this.WalletNumber, this.state.gesturePassword, this.address, this.state.service).then(() => {
+        // UserService.Instance.assets_move(this.state.selectedCoinId, this.state.changeCoin, this.WalletNumber, this.gesturePasswords, this.bankName, this.bankId, this.state.service).then(() => {
             UIUtil.hideLoading();
             Modal.alert('提示', '提取成功', [{
                 text: 'ok', onPress: () => {
@@ -151,7 +156,7 @@ export class Wallet extends React.Component<WalletProps, WalletState> {
 
     }
     onCheckgesturePwd = (e:any) => {
-        let type = e.target.getAttribute("data-id");
+        let type = e.currentTarget.dataset.id;
         console.log('type:'+type)
         if(type == '1'){
             console.log('复投')
@@ -172,15 +177,9 @@ export class Wallet extends React.Component<WalletProps, WalletState> {
                 UIUtil.showInfo(numberInfo)
                 return
             }
-            const bankname = "请输入银行名"
-            if (!this.bankName) {
-                UIUtil.showInfo(bankname)
-                return
-            }
-            const bankid = "请输入银行卡号"
-            if (!this.bankId) {
-                UIUtil.showInfo(bankid)
-                return
+            const add = "请输入钱包地址"
+            if (!this.address) {
+                UIUtil.showInfo(add)
             }
         }
         UserService.Instance.check_gesture_password().then( (res:any)=> {
@@ -257,6 +256,7 @@ export class Wallet extends React.Component<WalletProps, WalletState> {
             selectedCoinId: list.id,
             sValue: [list.name],
             usable: list.usable,
+            address: list.address,
             service_charge: '0',
         })
         
@@ -328,6 +328,7 @@ export class Wallet extends React.Component<WalletProps, WalletState> {
                 coinlist: list,
                 selectedCoinId: res[0].id,
                 sValue: [res[0].name],
+                address: res[0].address,
                 usable: res[0].usable,
                 service_charge: '0',
             })
@@ -436,11 +437,15 @@ export class Wallet extends React.Component<WalletProps, WalletState> {
                                 <InputItem placeholder={"最少可提取："+ this.state.assets_move_min +"，最多可提取：" + this.state.assets_move_max} type="number" onBlur={this.onNumberBlur} ></InputItem>
                             </List>
                             <WhiteSpace size="lg" />
-                            <div className='wallet-list-title'>银行卡</div>
+                            <div className='wallet-list-title'>钱包地址</div>
+                            <List className="change-list">
+                                <InputItem labelNumber={6} placeholder="请输入钱包地址" type="text" onBlur={this.onAddressBlur}></InputItem>
+                            </List>
+                            {/* <div className='wallet-list-title'>银行卡</div>
                             <List className="change-list">
                                 <List.Item extra={this.bankName}>银行名称</List.Item>
                                 <List.Item extra={this.bankId}>银行卡号</List.Item>
-                            </List>
+                            </List> */}
                             <WhiteSpace size="lg" />
                             <WhiteSpace size="lg" />
                             {/* <div className='wallet-list-title'>矿工费</div>

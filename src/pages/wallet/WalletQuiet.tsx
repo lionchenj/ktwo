@@ -32,7 +32,8 @@ interface WalletQuietState {
     assets_static_min:string,
     assets_static_max:string,
     isTP:boolean,
-    ftNumber:string
+    ftNumber:string,
+    address: string,
 }
 const tabs = [
     { title: '静态通证' },
@@ -74,6 +75,7 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
     type:string
     bankName: string
     bankId: string
+    address: string
     constructor(props: WalletQuietProps) {
         super(props)
         this.codeCountDownTimer = 0
@@ -96,7 +98,8 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
             assets_static_min:'0',
             assets_static_max:'0',
             isTP:true,
-            ftNumber:'0'
+            ftNumber:'0',
+            address: ''
         }
     }
 
@@ -122,6 +125,9 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
             service: service
         });
     }
+    onAddressBlur = (value: string) => {
+        this.address = value
+    }
     onbankNameBlur = (value: string) => {
         this.bankName = value
     }
@@ -146,7 +152,8 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
     }
     onSubmit = () => {
         UIUtil.showLoading("提取中");
-        UserService.Instance.assets_static(this.state.selectedCoinId, this.state.changeCoin, this.WalletQuietNumber, this.state.gesturePassword, this.bankId, this.state.service).then(() => {
+        UserService.Instance.assets_static(this.state.selectedCoinId, this.state.changeCoin, this.WalletQuietNumber, this.state.gesturePassword, this.address, this.state.service).then(() => {
+        // UserService.Instance.assets_static(this.state.selectedCoinId, this.state.changeCoin, this.WalletQuietNumber, this.state.gesturePassword, this.bankId, this.state.service).then(() => {
             UIUtil.hideLoading();
             Modal.alert('提示', '提取成功', [{
                 text: 'ok', onPress: () => {
@@ -158,7 +165,7 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
         })
     }
     onCheckgesturePwd = (e:any) => {
-        let type = e.target.getAttribute("data-id");
+        let type = e.currentTarget.dataset.id;
         console.log('type:'+type)
         if(type == '1'){
             const activateInfo = "请输入激活码"
@@ -175,6 +182,11 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
             const numberInfo = "请输入数量"
             if (!this.WalletQuietNumber) {
                 UIUtil.showInfo(numberInfo)
+                return
+            }
+            const add = "请输入提现地址"
+            if (!this.address) {
+                UIUtil.showInfo(add)
                 return
             }
         }
@@ -202,6 +214,8 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
         console.log(event)
         let val = this.gesturePasswords + event.target.innerHTML ;
         this.gesturePasswords = val;
+        console.log(val)
+        console.log(val.length)
         if(val.length>5){
             this.setState({
                 showKey: false
@@ -250,6 +264,7 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
             selectedCoinId: list.id,
             sValue: [list.name],
             usable: list.usable,
+            address: list.address,
             service_charge:list.service_charge,
         })
     }
@@ -319,6 +334,7 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
                 coinlist: list,
                 selectedCoinId: res[0].id,
                 sValue: [res[0].name],
+                address: res[0].address,
                 service_charge: res[0].service_charge,
                 usable: res[0].usable,
             })
@@ -425,11 +441,15 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
                                 <InputItem placeholder={"最少可提取："+ this.state.assets_static_min +"，最多可提取：" + this.state.assets_static_max} type="digit" onBlur={this.onNumberBlur} ></InputItem>
                             </List>
                             <WhiteSpace size="lg" />
-                            <div className='wallet-list-title'>银行卡</div>
-                            <List className="change-list">
+                            <div className='wallet-list-title'>钱包地址</div>
+                             <List className="change-list">
+                                <InputItem labelNumber={6} placeholder="请输入钱包地址" type="text" onBlur={this.onAddressBlur}></InputItem>
+                            </List>
+                            {/*<div className='wallet-list-title'>银行卡</div>
+                             <List className="change-list">
                             <List.Item extra={this.bankName}>银行名称</List.Item>
                                 <List.Item extra={this.bankId}>银行卡号</List.Item>
-                            </List>
+                            </List> */}
                             <WhiteSpace size="lg" />
                             <WhiteSpace size="lg" />
                             {/* <div className='wallet-list-title'>矿工费</div>
