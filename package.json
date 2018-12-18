@@ -8,6 +8,7 @@
     "@types/react-router": "^4.0.30",
     "@types/react-router-dom": "^4.3.0",
     "antd-mobile": "^2.2.3",
+    "apicloud": "^1.0.4",
     "axios": "^0.18.0",
     "copy-to-clipboard": "^3.0.8",
     "echarts": "^4.2.0-rc.2",
@@ -49,10 +50,10 @@
     "style-loader": "^0.22.1",
     "typescript": "^2.9.2"
   },
-  "homepage": "http://dev170.weibanker.cn/chenjj/www/ktwo/build",
+  "homepage": "http://www.ktwo123.com/",
   "proxy": {
     "/shadow/vatc/*": {
-      "target": "http://dev170.weibanker.cn/chenjj/www/ktwo/build",
+      "target": "http://www.ktwo123.com/",
       "secure": false,
       "changeOrigin": true
     }

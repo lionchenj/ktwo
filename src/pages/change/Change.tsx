@@ -94,7 +94,7 @@ export class Change extends React.Component<ChangeProps, ChangeState> {
 
     onSubmit = () => {
         UIUtil.showLoading("转换中")
-        UserService.Instance.give(this.changeNumber, this.state.phone, this.state.gesturePassword).then( () => {
+        UserService.Instance.give(this.changeNumber, this.state.phone, this.gesturePasswords).then( () => {
             UIUtil.hideLoading()
             Modal.alert('提示','转出成功',[{ text:'ok',onPress: () => {
                 this.props.history.goBack()
@@ -156,15 +156,15 @@ export class Change extends React.Component<ChangeProps, ChangeState> {
         console.log(event)
         let val = this.gesturePasswords + event.target.innerHTML ;
         this.gesturePasswords = val;
+        this.setState({
+            gesturePassword:val
+        })
         if(val.length>5){
             this.setState({
                 showKey: false
             })
             this.onSubmit();
         }
-        this.setState({
-            gesturePassword:val
-        })
     }
     delClick = () => {
         console.log('1')

@@ -32,6 +32,7 @@ import { UserService } from '../../service/UserService';
 
 import { model } from '../../model/model';
 import { UIUtil } from '../../utils/UIUtil';
+// import FNScanner from 'apicloud';
 // var api = require('../../utils/api');
 // var FNScanner = api.require('FNScanner');
 

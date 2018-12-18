@@ -142,7 +142,7 @@ export class Wallet extends React.Component<WalletProps, WalletState> {
     //提现
     onSubmit = () => {
         UIUtil.showLoading("提取中");
-        UserService.Instance.assets_move(this.state.selectedCoinId, this.state.changeCoin, this.WalletNumber, this.state.gesturePassword, this.address, this.state.service).then(() => {
+        UserService.Instance.assets_move(this.state.selectedCoinId, this.state.changeCoin, this.WalletNumber, this.gesturePasswords, this.address, this.state.service).then(() => {
         // UserService.Instance.assets_move(this.state.selectedCoinId, this.state.changeCoin, this.WalletNumber, this.gesturePasswords, this.bankName, this.bankId, this.state.service).then(() => {
             UIUtil.hideLoading();
             Modal.alert('提示', '提取成功', [{
@@ -293,25 +293,25 @@ export class Wallet extends React.Component<WalletProps, WalletState> {
                 assets_move_min: res.data.assets_move_min
             })
         })
-        UserService.Instance.listPayment().then( (res:any) => {
-            if(res.data.length == 0){
-                UIUtil.showInfo("暂无银行卡,请新增银行卡");
-                this.props.history.push("/bankCardAdd",{page:'ww'})
-                return;
-            }
-            res.data.map((bank:any)=>{
-                if(bank.type == '2'){
-                    this.bankName = bank.bank_name;
-                    this.bankId = bank.account;
-                }
-            })
-            if(this.bankName == ''){
-                UIUtil.showInfo("暂无默认银行卡，请到设置-银行卡")
-            }
-        }).catch( err => {
-            const message = (err as Error).message
-            Toast.fail(message)
-        })
+        // UserService.Instance.listPayment().then( (res:any) => {
+        //     if(res.data.length == 0){
+        //         UIUtil.showInfo("暂无银行卡,请新增银行卡");
+        //         this.props.history.push("/bankCardAdd",{page:'ww'})
+        //         return;
+        //     }
+        //     res.data.map((bank:any)=>{
+        //         if(bank.type == '2'){
+        //             this.bankName = bank.bank_name;
+        //             this.bankId = bank.account;
+        //         }
+        //     })
+        //     if(this.bankName == ''){
+        //         UIUtil.showInfo("暂无默认银行卡，请到设置-银行卡")
+        //     }
+        // }).catch( err => {
+        //     const message = (err as Error).message
+        //     Toast.fail(message)
+        // })
         UserService.Instance.getCoin().then((res) => {
             var list = []
             for (var i in res) {

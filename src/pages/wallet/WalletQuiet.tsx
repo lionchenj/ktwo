@@ -139,7 +139,7 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
     }
     onActivate = () => {
         UIUtil.showLoading("复投中");
-        UserService.Instance.activate_static(this.state.ftNumber, this.state.gesturePassword, this.activate, this.state.service).then(() => {
+        UserService.Instance.activate_static(this.state.ftNumber, this.gesturePasswords, this.activate, this.state.service).then(() => {
             UIUtil.hideLoading();
             Modal.alert('提示', '再种成功', [{
                 text: 'ok', onPress: () => {
@@ -152,8 +152,8 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
     }
     onSubmit = () => {
         UIUtil.showLoading("提取中");
-        UserService.Instance.assets_static(this.state.selectedCoinId, this.state.changeCoin, this.WalletQuietNumber, this.state.gesturePassword, this.address, this.state.service).then(() => {
-        // UserService.Instance.assets_static(this.state.selectedCoinId, this.state.changeCoin, this.WalletQuietNumber, this.state.gesturePassword, this.bankId, this.state.service).then(() => {
+        UserService.Instance.assets_static(this.state.selectedCoinId, this.state.changeCoin, this.WalletQuietNumber, this.gesturePasswords, this.address, this.state.service).then(() => {
+        // UserService.Instance.assets_static(this.state.selectedCoinId, this.state.changeCoin, this.WalletQuietNumber, this.gesturePasswords, this.bankId, this.state.service).then(() => {
             UIUtil.hideLoading();
             Modal.alert('提示', '提取成功', [{
                 text: 'ok', onPress: () => {
@@ -214,6 +214,9 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
         console.log(event)
         let val = this.gesturePasswords + event.target.innerHTML ;
         this.gesturePasswords = val;
+        this.setState({
+            gesturePassword:val
+        })
         console.log(val)
         console.log(val.length)
         if(val.length>5){
@@ -226,9 +229,6 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
                 this.onSubmit();
             }
         }
-        this.setState({
-            gesturePassword:val
-        })
     }
     delClick = () => {
         console.log('1')
@@ -299,25 +299,25 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
                 assets_static_min: res.data.assets_static_min
             })
         })
-        UserService.Instance.listPayment().then( (res:any) => {
-            if(res.data.length == 0){
-                UIUtil.showInfo("暂无银行卡,请新增银行卡");
-                this.props.history.push("/bankCardAdd",{page:'wq'});
-                return;
-            }
-            res.data.map((bank:any)=>{
-                if(bank.type == '2'){
-                    this.bankName = bank.bank_name;
-                    this.bankId = bank.account;
-                }
-            })
-            if(this.bankName == ''){
-                UIUtil.showInfo("暂无默认银行卡，请到设置-银行卡")
-            }
-        }).catch( err => {
-            const message = (err as Error).message
-            Toast.fail(message)
-        })
+        // UserService.Instance.listPayment().then( (res:any) => {
+        //     if(res.data.length == 0){
+        //         UIUtil.showInfo("暂无银行卡,请新增银行卡");
+        //         this.props.history.push("/bankCardAdd",{page:'wq'});
+        //         return;
+        //     }
+        //     res.data.map((bank:any)=>{
+        //         if(bank.type == '2'){
+        //             this.bankName = bank.bank_name;
+        //             this.bankId = bank.account;
+        //         }
+        //     })
+        //     if(this.bankName == ''){
+        //         UIUtil.showInfo("暂无默认银行卡，请到设置-银行卡")
+        //     }
+        // }).catch( err => {
+        //     const message = (err as Error).message
+        //     Toast.fail(message)
+        // })
         UserService.Instance.getCoin().then((res) => {
             var list = []
             for (var i in res) {
