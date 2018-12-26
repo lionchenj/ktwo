@@ -270,10 +270,9 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
     }
     getExchangeRate = (ticker:string) => {
         UserService.Instance.tick(ticker).then( datalist => {
-            console.log(datalist.close)
             this.setState({
-                exchange_rate: datalist.close,
-                changeCoin: (parseFloat(this.WalletQuietNumber) / parseFloat(datalist.close)) + ''
+                exchange_rate: datalist.low,
+                changeCoin: (parseFloat(this.WalletQuietNumber) / parseFloat(datalist.low)) + ''
             })
         })
     }

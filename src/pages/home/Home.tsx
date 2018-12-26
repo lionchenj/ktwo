@@ -25,7 +25,7 @@ import iconTeam from "../../assets/icon_team.png"
 import iconMessage from "../../assets/icon_message.png"
 import iconShop from "../../assets/icon_shop.png"
 
-import banner1 from "../../assets/banner1.png"
+// import banner1 from "../../assets/banner1.png"
 import banner2 from "../../assets/banner2.png"
 
 import { UserService } from '../../service/UserService';
@@ -302,12 +302,13 @@ export class Home extends React.Component<HomeProps, HomeState> {
             let list = this.state.klinesList;
             let max = Math.max(...list)+"";
             let min = Math.min(...list)+"";
-            UserStorage.setCookie('exchange_rate',datalist.close)
+            UserStorage.setCookie('exchange_rate',datalist.low)
             this.max = Math.ceil(parseFloat(max));
             this.min = Math.floor(parseFloat(min));
-            console.log(max)
-            console.log(this.max)
-            list[4] = datalist.close;
+            console.log("high:"+datalist.high)
+            console.log("close:"+datalist.close)
+            console.log("low:"+datalist.low)
+            list[4] = datalist.low;
             this.setState({
                 klinesList:list
             })
@@ -378,7 +379,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                 clearInterval(this.interva);
                 this.interva = setInterval(()=>{
                     this.getExchangeRate(res[0].ticker)
-                },5000);
+                },60000);
                 var list = []
                 console.log(res)
                 for(var i in res){
@@ -555,14 +556,14 @@ export class Home extends React.Component<HomeProps, HomeState> {
             </div>)
           }
           let banners = [];
-        //   if(this.state.banners.length != 0 ){
-        //     for(let i of this.state.banners){
-        //         banners.push(<div><img className="banner-img" src={i.img_path} /></div>)
-        //     }
-        //   }else{
-            banners.push(<div><img className="banner-img" src={banner1} /></div>)
+          if(this.state.banners.length != 0 ){
+            for(let i of this.state.banners){
+                banners.push(<div><img className="banner-img" src={i.img_path} /></div>)
+            }
+          }else{
+            // banners.push(<div><img className="banner-img" src={banner1} /></div>)
             banners.push(<div><img className="banner-img" src={banner2} /></div>)
-        //   }
+          }
         return (
             <div className="home-container">
                 {/* <NavBar mode="light"  className="home-navbar" ><div className="nav-title">寳树通</div></NavBar> */}
@@ -596,8 +597,7 @@ export class Home extends React.Component<HomeProps, HomeState> {
                             >
                                 <div className="home-banner">
                                     <Carousel autoplay dots>
-                                        {banners}
-                                        {/* {this.state.banners.map((val:any, index:string) => (
+                                        {this.state.banners.map((val:any, index:string) => (
                                             <a
                                             key={index}
                                             href={val.link}
@@ -606,15 +606,14 @@ export class Home extends React.Component<HomeProps, HomeState> {
                                             <img
                                                 src={val.img_path}
                                                 alt={val.title}
-                                                style={{ width: '100%',height: '1.5rem' , verticalAlign: 'top' }}
+                                                style={{ width: '100%',height: '1.7rem' , verticalAlign: 'top' }}
                                                 onLoad={() => {
-                                                // fire window resize event to change height
                                                 window.dispatchEvent(new Event('resize'));
-                                                this.setState({ imgHeight: 'auto' });
+                                                this.setState({ imgHeight: '1.7rem' });
                                                 }}
                                             />
                                             </a>
-                                        ))} */}
+                                        ))}
                                     </Carousel>
                                 </div>
                                

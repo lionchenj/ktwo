@@ -263,10 +263,9 @@ export class Wallet extends React.Component<WalletProps, WalletState> {
     }
     getExchangeRate = (ticker:string) => {
         UserService.Instance.tick(ticker).then( datalist => {
-            console.log(datalist.close)
             this.setState({
-                exchange_rate: datalist.close,
-                changeCoin: (parseFloat(this.WalletNumber) / parseFloat(datalist.close)) + ''
+                exchange_rate: datalist.low,
+                changeCoin: (parseFloat(this.WalletNumber) / parseFloat(datalist.low)) + ''
             })
         })
     }

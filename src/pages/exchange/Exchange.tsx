@@ -33,30 +33,17 @@ interface ChangeState {
     changeCoin?: string,
     gesturePassword:string,
     showKey:boolean,
-    activation_code:string
+    activation_code:string,
+    bgcolor:string,
+    color:string,
+    exChangeAmount:any[]
 }
 
 const tabs = [
     { title: '充币' },
     { title: '币兑换通证' },
 ];
-const exChangeAmount = [
-    {
-    text:'1000'
-    },{
-    text:'3000'
-    },{
-    text:'5000'
-    },{
-    text:'10000'
-    },{
-    text:'20000'
-    },{
-    text:'30000'
-    },{
-    text:'50000'
-    }
-]
+// const 
 const bodyHeight = (window.innerHeight/100 - 0.9) + 'rem';
 
 // const CustomChildren = (props:any) => (
@@ -93,7 +80,30 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
             radomCode: '0',
             showKey:false,
             gesturePassword:'',
-            activation_code:''
+            activation_code:'',
+            bgcolor:'#ffffff',
+            color:'#4A90E2',
+            exChangeAmount: [
+                {
+                text:'1000',
+                isclick:false
+                },{
+                text:'3000',
+                isclick:false
+                },{
+                text:'5000',
+                isclick:false
+                },{
+                text:'10000',
+                isclick:false
+                },{
+                text:'20000'
+                },{
+                text:'30000'
+                },{
+                text:'50000'
+                }
+            ]
         }
     }
     onChange = (files: any[], type: any, index: number) => {
@@ -202,17 +212,25 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
     }
     getExchangeRate = (ticker:string) => {
         UserService.Instance.tick(ticker).then( datalist => {
-            console.log(datalist.close)
             this.setState({
-                exchange_rate: datalist.close,
-                usables: this.changeNumber?(parseFloat(this.changeNumber) / parseFloat(datalist.close))+'':''
+                exchange_rate: datalist.low,
+                usables: this.changeNumber?(parseFloat(this.changeNumber) / parseFloat(datalist.low))+'':''
             })
         })
     }
     setUsable = (e:any) =>{
         console.log(e)
+        let data = this.state.exChangeAmount;
+        data.map((res)=>{
+            if(res.text == e.target.innerText){
+                res.isclick = true;
+            }else{
+                res.isclick = false;
+            }
+        })
         this.changeNumber = e.target.innerText;
         this.setState({
+            exChangeAmount: data,
             changeCoin: this.changeNumber,
             usables: (parseFloat(this.changeNumber) / parseFloat(this.state.exchange_rate))+'' 
         })
@@ -370,7 +388,7 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
                                         <div className="am-input-control">{this.state.usables?this.state.usables:("现有个数" + this.state.usable)}
                                         </div></div>
                                     </div>
-                                    <Grid className="exchange" square={false} data={exChangeAmount} hasLine={false}  columnNum={4}
+                                    <Grid className="exchange" square={false} data={this.state.exChangeAmount} hasLine={false}  columnNum={4}
                                     renderItem={(dataItem:any) => (
                                         <div style={{margin: "0 .1rem"}}>
                                           {
@@ -379,7 +397,7 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
                                                 {dataItem.text}
                                             </div>
                                           :
-                                            <div onClick={this.setUsable} style={{ textAlign:'center', padding: '.08rem 0.1rem', borderRadius: '.05rem', color: '#4A90E2', fontSize: '14px', marginTop: '12px',border: '1px solid #4A90E2' }}>
+                                            <div onClick={this.setUsable} style={{ textAlign:'center', padding: '.08rem 0.1rem', borderRadius: '.05rem', backgroundColor: dataItem.isclick?'#4A90E2':'#fff', color: dataItem.isclick?'#fff':'#4A90E2', fontSize: '14px', marginTop: '12px',border: '1px solid #4A90E2' }}>
                                                 {dataItem.text}
                                             </div>
                                         }

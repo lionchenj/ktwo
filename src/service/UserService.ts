@@ -103,7 +103,7 @@ export class UserService extends ServiceBase {
     public async uploadFile(file: File): Promise<string> {
         const resp = await this.httpUpload(file)
         console.log("uploadFile", resp)
-        return resp.data.data.path as string
+        return resp.data.data.path + resp.data.path as string
     }
 
     public async getPurseAddress(): Promise<model.PurseAddress> {

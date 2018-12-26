@@ -17,6 +17,7 @@ interface EarningsQuietState {
     hasMore: boolean,
     height: number,
     visible: boolean,
+    lists: any[],
     selectedEarningStyle?: "2"|"3"|"4"|"5"
 }
 
@@ -37,6 +38,7 @@ export class EarningsQuiet extends React.Component<EarningsQuietProps, EarningsQ
       
           this.state = {
             dataSource,
+            lists: [],
             isLoading: true,
             hasMore: false,
             height:  document.documentElement.clientHeight - 200,
@@ -146,11 +148,16 @@ export class EarningsQuiet extends React.Component<EarningsQuietProps, EarningsQ
         const offsetTop = (ReactDOM.findDOMNode(this.lv)!.parentNode! as HTMLElement).offsetTop
         const hei = document.documentElement.clientHeight - offsetTop
         this.page = this.page +1;
+        let list:any = this.state.lists;
+        profitData.list.map((res:any)=>{
+            list.push(res)
+        })
         this.setState({
-          dataSource: this.state.dataSource.cloneWithRows(profitData.list),
-          isLoading: false,
-          hasMore: false,
-          height: hei
+            lists:list,
+            dataSource: this.state.dataSource.cloneWithRows(list),
+            isLoading: false,
+            hasMore: false,
+            height: hei
         });
       })
     }

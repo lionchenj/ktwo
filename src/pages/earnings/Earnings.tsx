@@ -23,6 +23,7 @@ interface EarningsState {
     hasMore: boolean,
     height: number,
     visible: boolean,
+    lists: any[],
     selectedEarningStyle: string
 }
 
@@ -40,6 +41,7 @@ export class Earnings extends React.Component<EarningsProps, EarningsState> {
           this.page = 1
           this.state = {
             dataSource,
+            lists: [],
             isLoading: true,
             hasMore: false,
             height:  document.documentElement.clientHeight - 200,
@@ -179,8 +181,13 @@ export class Earnings extends React.Component<EarningsProps, EarningsState> {
         const offsetTop = (ReactDOM.findDOMNode(this.lv)!.parentNode! as HTMLElement).offsetTop
         const hei = document.documentElement.clientHeight - offsetTop
         this.page = this.page + 1;
+        let list:any = this.state.lists;
+        profitData.list.map((res:any)=>{
+            list.push(res)
+        })
         this.setState({
-          dataSource: this.state.dataSource.cloneWithRows(profitData.list),
+          lists:list,
+          dataSource: this.state.dataSource.cloneWithRows(list),
           isLoading: false,
           hasMore: false,
           height: hei
