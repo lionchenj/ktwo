@@ -57,7 +57,11 @@ export namespace model {
         page: number,
         list: Array<T>
     }
-
+    export interface PageDataS<T> {
+        total_num: string,
+        page: number,
+        list: Array<T>
+    }
     export interface CoinInfo {
         id: string,
         name: string,

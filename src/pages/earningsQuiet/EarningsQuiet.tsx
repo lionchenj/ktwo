@@ -18,6 +18,7 @@ interface EarningsQuietState {
     height: number,
     visible: boolean,
     lists: any[],
+    total_num: string,
     selectedEarningStyle?: "2"|"3"|"4"|"5"
 }
 
@@ -38,6 +39,7 @@ export class EarningsQuiet extends React.Component<EarningsQuietProps, EarningsQ
       
           this.state = {
             dataSource,
+            total_num:'',
             lists: [],
             isLoading: true,
             hasMore: false,
@@ -62,6 +64,9 @@ export class EarningsQuiet extends React.Component<EarningsQuietProps, EarningsQ
         // hasMore: from backend data, indicates whether it is the last page, here is false
         if (this.state.isLoading && !this.state.hasMore) {
           return;
+        }
+        if (!this.state.isLoading && this.state.hasMore) {
+            return;
         }
         this.setState({ isLoading: true });
         this._loadDataWithStyle()
@@ -154,9 +159,10 @@ export class EarningsQuiet extends React.Component<EarningsQuietProps, EarningsQ
         })
         this.setState({
             lists:list,
+            total_num: profitData.total_num,
             dataSource: this.state.dataSource.cloneWithRows(list),
             isLoading: false,
-            hasMore: false,
+            hasMore: profitData.list.length == 0?true:false,
             height: hei
         });
       })

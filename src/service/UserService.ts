@@ -138,11 +138,11 @@ export class UserService extends ServiceBase {
         return await this.httpPost("staticWallet")
     }
     //静态复投
-    public async activate_static( number: string,gesture_password:string,activation_code:string,service:number): Promise<void> {
+    public async activate_static( number: string,gesture_password:string,service:number): Promise<void> {
         const params = {
             number:number,
             gesture_password:gesture_password,
-            activation_code:activation_code,
+            // activation_code:activation_code,
             service:service
         }
         return await this.httpPost("activate_static", params, true)
@@ -165,11 +165,11 @@ export class UserService extends ServiceBase {
         return await this.httpPost("moveWallet")
     }
     //动态复投
-    public async activate_move(number: string,gesture_password:string,activation_code:string,service:number): Promise<void> {
+    public async activate_move(number: string,gesture_password:string,service:number): Promise<void> {
         const params = {
             number:number,
             gesture_password:gesture_password,
-            activation_code:activation_code,
+            // activation_code:activation_code,
             service:service
         }
         return await this.httpPost("activate_move", params, true)
@@ -269,13 +269,13 @@ export class UserService extends ServiceBase {
         return await this.httpPost("giveOut", params)
     }
     //币兑换
-    public async exchange(coinId: string, code: string, activation_code:string, number?: string, coin_number?: string): Promise<void> {
+    public async exchange(coinId: string, code: string, number?: string, coin_number?: string): Promise<void> {
         const params = {
             coin_id: coinId,
             coin_number: coin_number,
             number:number,
             gesture_password: code,
-            activation_code: activation_code
+            // activation_code: activation_code
         }
         return await this.httpPost("exchange", params)
     }
@@ -413,14 +413,14 @@ public async forgetGesturePassword( verification_code:string, password:string, r
     
     
     // 收益记录
-    public async profit(style?: string, page?: number): Promise<model.PageData<model.ProfitItem>> {
+    public async profit(style?: string, page?: number): Promise<model.PageDataS<model.ProfitItem>> {
         const params = {
             page,
             limit:10,
             style
         }
         const resp = await this.httpPost("profit", params)
-        return resp.data as model.PageData<model.ProfitItem>
+        return resp.data as model.PageDataS<model.ProfitItem>
 
     }
 

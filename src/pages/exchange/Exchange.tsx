@@ -33,7 +33,7 @@ interface ChangeState {
     changeCoin?: string,
     gesturePassword:string,
     showKey:boolean,
-    activation_code:string,
+    // activation_code:string,
     bgcolor:string,
     color:string,
     exChangeAmount:any[]
@@ -59,7 +59,7 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
     changeNumber: string
     phone: string
     name: string
-    activation_code: string
+    // activation_code: string
     voucher: string
     gesturePasswords:string
     interva:any
@@ -80,7 +80,7 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
             radomCode: '0',
             showKey:false,
             gesturePassword:'',
-            activation_code:'',
+            // activation_code:'',
             bgcolor:'#ffffff',
             color:'#4A90E2',
             exChangeAmount: [
@@ -156,10 +156,10 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
         this.changeNumber = value;
         this.setState({changeCoin:(parseInt(this.changeNumber) * parseInt(this.state.exchange_rate))+''})
     }
-    onActivation = (value: string) => {
-        this.activation_code = value;
-        this.setState({activation_code:value})
-    }
+    // onActivation = (value: string) => {
+    //     this.activation_code = value;
+    //     this.setState({activation_code:value})
+    // }
     onVoucher = (value: string) => {
         this.voucher = value
     }
@@ -178,7 +178,7 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
 
     onSubmit = () => {
         UIUtil.showLoading("转币中")
-        UserService.Instance.exchange(this.state.selectedCoinId, this.gesturePasswords,this.activation_code, this.state.changeCoin, this.state.usables).then( () => {
+        UserService.Instance.exchange(this.state.selectedCoinId, this.gesturePasswords, this.state.changeCoin, this.state.usables).then( () => {
             UIUtil.hideLoading();
             Modal.alert('转币成功','提示',[{ text:'ok',onPress: () => {
                 this.props.history.goBack()
@@ -274,11 +274,11 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
             }
         }else{
             const numberInfo = "请输入数量"
-            const codeInfo = "请输入激活码"
-            if (!this.activation_code) {
-                UIUtil.showInfo(codeInfo)
-                return
-            }
+            // const codeInfo = "请输入激活码"
+            // if (!this.activation_code) {
+            //     UIUtil.showInfo(codeInfo)
+            //     return
+            // }
             if (!this.changeNumber) {
                 UIUtil.showInfo(numberInfo)
                 return
@@ -382,7 +382,7 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
                                 <List.Item  arrow="horizontal" thumb={iconRmb}>选择币种</List.Item>
                                 </Picker>
                                 <List className="change-list">
-                                    <InputItem labelNumber={7} type="text" placeholder="请输入激活码" onBlur={ this.onActivation}>激活码</InputItem>
+                                    {/* <InputItem labelNumber={7} type="text" placeholder="请输入激活码" onBlur={ this.onActivation}>激活码</InputItem> */}
                                     <div className="am-list-item am-input-item am-list-item-middle">
                                         <div className="am-list-line"><div className="am-input-label am-input-label-7">币兑换数量</div>
                                         <div className="am-input-control">{this.state.usables?this.state.usables:("现有个数" + this.state.usable)}

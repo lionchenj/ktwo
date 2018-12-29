@@ -67,7 +67,7 @@ const exChangeAmount = [
 const bodyHeight = (window.innerHeight / 100 - 0.9) + 'rem';
 export class Wallet extends React.Component<WalletProps, WalletState> {
     codeCountDownTimer: number
-    activate: string
+    // activate: string
     WalletNumber: string
     address: string
     gesturePasswords:string
@@ -122,13 +122,13 @@ export class Wallet extends React.Component<WalletProps, WalletState> {
         });
     }
     
-    onActivateBlur = (value: string) => {
-        this.activate = value
-    }
+    // onActivateBlur = (value: string) => {
+    //     this.activate = value
+    // }
     //复投
     onActivate = () => {
         UIUtil.showLoading("复投中");
-        UserService.Instance.activate_move(this.state.ftNumber, this.gesturePasswords, this.activate, this.state.service).then(() => {
+        UserService.Instance.activate_move(this.state.ftNumber, this.gesturePasswords, this.state.service).then(() => {
             UIUtil.hideLoading();
             Modal.alert('提示', '复投成功', [{
                 text: 'ok', onPress: () => {
@@ -160,11 +160,11 @@ export class Wallet extends React.Component<WalletProps, WalletState> {
         console.log('type:'+type)
         if(type == '1'){
             console.log('复投')
-            const activateInfo = "请输入激活码"
-            if (!this.activate) {
-                UIUtil.showInfo(activateInfo)
-                return
-            }
+            // const activateInfo = "请输入激活码"
+            // if (!this.activate) {
+            //     UIUtil.showInfo(activateInfo)
+            //     return
+            // }
             const numberInfo = "请输入数量"
             if (!this.state.ftNumber) {
                 UIUtil.showInfo(numberInfo)
@@ -362,9 +362,9 @@ export class Wallet extends React.Component<WalletProps, WalletState> {
                     <div style={{ height: bodyHeight, backgroundColor: '#f5f5f5' }}>
                         <WingBlank>
                             <WhiteSpace size="sm" />
-                            <List className="wallet-list">
+                            {/* <List className="wallet-list">
                                 <InputItem labelNumber={6} placeholder="请输入激活码" type="text" onBlur={this.onActivateBlur}>激活码</InputItem>
-                            </List>
+                            </List> */}
                             <WhiteSpace size="lg" />
                             <div className='wallet-list-title'>选择复投通证数量（可复投通证数量：<span>{this.state.servicemax}</span>）</div>
                             <div className="am-list-item am-input-item am-list-item-middle">
