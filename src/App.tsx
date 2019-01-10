@@ -31,8 +31,10 @@ import { MyCode } from "./pages/myCode/MyCode"
 import { Earnings } from "./pages/earnings/Earnings";
 import { EarningsQuiet } from "./pages/earningsQuiet/EarningsQuiet";
 import { Activate } from "./pages/activate/Activate";
+import { activation } from "./pages/activation/activation";
 import { Customer } from "./pages/customer/Customer";
 import { WithdrawHistory } from "./pages/withdrawHistory/WithdrawHistory";
+import { activationHistory } from "./pages/activationHistory/activationHistory";
 import { DepositHistory } from "./pages/depositHistory/DepositHistory";
 import { ChangeHistory } from "./pages/changeHistory/ChangeHistory";
 import { MessageDetail } from "./pages/messageDetail/MessageDetail";
@@ -53,6 +55,7 @@ class App extends React.Component {
           <Route path="/idcard" component={IdCard} />
           <PrivateRoute path="/myTeam"  component={MyTeam} />
           <PrivateRoute path="/settings" component={Settings} />
+          <PrivateRoute path="/activation" component={activation} />
           <PrivateRoute path="/sales" component={Sales} />
           <PrivateRoute path="/myCode" component={MyCode} />
           <PrivateRoute path="/message" component={Message} />
@@ -76,6 +79,7 @@ class App extends React.Component {
           <PrivateRoute path="/activate" component={Activate} />
           <PrivateRoute path="/customer" component={Customer} />
           <PrivateRoute path="/withdrawHistory" component={WithdrawHistory} />
+          <PrivateRoute path="/activationHistory" component={activationHistory} />
           <PrivateRoute path="/depositHistory" component={DepositHistory} />
           <PrivateRoute path="/changeHistory" component={ChangeHistory} />
           <PrivateRoute path="/messageDetail" component={MessageDetail} />

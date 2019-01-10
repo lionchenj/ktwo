@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { NavBar, Icon, List, InputItem, Button, WhiteSpace, WingBlank, Modal, Tabs, Picker, TextareaItem, Grid, Toast} from "antd-mobile";
+import { NavBar, Icon, List, InputItem, Button, WhiteSpace, WingBlank, Modal, Tabs, Picker, TextareaItem, Toast, Grid} from "antd-mobile";
 import { History } from "history";
 import "./Exchange.css"
 
@@ -36,7 +36,9 @@ interface ChangeState {
     // activation_code:string,
     bgcolor:string,
     color:string,
-    exChangeAmount:any[]
+    activation:string,
+    exChangeAmount:any,
+    activaData:any
 }
 
 const tabs = [
@@ -64,6 +66,7 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
     gesturePasswords:string
     interva:any
     onType:number
+    id: string
     constructor(props: ChangeProps) {
         super(props)
         this.gesturePasswords = ''
@@ -83,27 +86,9 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
             // activation_code:'',
             bgcolor:'#ffffff',
             color:'#4A90E2',
-            exChangeAmount: [
-                {
-                text:'1000',
-                isclick:false
-                },{
-                text:'3000',
-                isclick:false
-                },{
-                text:'5000',
-                isclick:false
-                },{
-                text:'10000',
-                isclick:false
-                },{
-                text:'20000'
-                },{
-                text:'30000'
-                },{
-                text:'50000'
-                }
-            ]
+            activation:'0',
+            exChangeAmount:[],
+            activaData:[]
         }
     }
     onChange = (files: any[], type: any, index: number) => {
@@ -178,7 +163,8 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
 
     onSubmit = () => {
         UIUtil.showLoading("转币中")
-        UserService.Instance.exchange(this.state.selectedCoinId, this.gesturePasswords, this.state.changeCoin, this.state.usables).then( () => {
+        console.log(this.id)
+        UserService.Instance.exchange(this.state.selectedCoinId, this.gesturePasswords, this.id, this.state.usables).then( () => {
             UIUtil.hideLoading();
             Modal.alert('转币成功','提示',[{ text:'ok',onPress: () => {
                 this.props.history.goBack()
@@ -219,10 +205,17 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
         })
     }
     setUsable = (e:any) =>{
-        console.log(e)
+        console.log(e.target.innerText)
         let data = this.state.exChangeAmount;
-        data.map((res)=>{
+        let activation = '';
+        data.map((res:any)=>{
+        console.log(res.text)
+
             if(res.text == e.target.innerText){
+                activation = res.activation;
+        console.log(res.id)
+
+                this.id = res.id;
                 res.isclick = true;
             }else{
                 res.isclick = false;
@@ -232,10 +225,23 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
         this.setState({
             exChangeAmount: data,
             changeCoin: this.changeNumber,
+            activation:activation,
             usables: (parseFloat(this.changeNumber) / parseFloat(this.state.exchange_rate))+'' 
         })
     }
     public componentDidMount () {
+        UserService.Instance.activationSetup().then(data => {
+            let exChangeAmount:any = [];
+            data.map( (res:any) => {
+                res.type = '0';
+                exChangeAmount.push({text:res.number,isclick:false,activation:res.activation,id:res.id})
+            })
+            console.log(data)
+            this.setState({
+                activaData:data,
+                exChangeAmount: exChangeAmount
+            })
+        })
         UserService.Instance.getCoin().then( (res) => {
             var list = []
             for(var i in res){
@@ -384,8 +390,18 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
                                 <List className="change-list">
                                     {/* <InputItem labelNumber={7} type="text" placeholder="请输入激活码" onBlur={ this.onActivation}>激活码</InputItem> */}
                                     <div className="am-list-item am-input-item am-list-item-middle">
-                                        <div className="am-list-line"><div className="am-input-label am-input-label-7">币兑换数量</div>
-                                        <div className="am-input-control">{this.state.usables?this.state.usables:("现有个数" + this.state.usable)}
+                                        <div className="am-list-line"><div className="am-input-label am-input-label-7">所需{this.state.sValue}数量</div>
+                                        <div className="am-input-control">{this.state.usables?this.state.usables:("现有" + this.state.sValue + "个数" + this.state.usable)}
+                                        </div></div>
+                                    </div>
+                                    <div className="am-list-item am-input-item am-list-item-middle">
+                                        <div className="am-list-line"><div className="am-input-label am-input-label-7">兑换通证数量</div>
+                                        <div className="am-input-control">{this.state.changeCoin?this.state.changeCoin:("现有通证数：" + (this.state.pageIndexData && this.state.pageIndexData.usable_static)||'0')}
+                                        </div></div>
+                                    </div>
+                                    <div className="am-list-item am-input-item am-list-item-middle">
+                                        <div className="am-list-line"><div className="am-input-label am-input-label-7">需要激活卡</div>
+                                        <div className="am-input-control">{this.state.activation?(this.state.activation + "个"):"0个"}
                                         </div></div>
                                     </div>
                                     <Grid className="exchange" square={false} data={this.state.exChangeAmount} hasLine={false}  columnNum={4}
@@ -404,11 +420,11 @@ export class Exchange extends React.Component<ChangeProps, ChangeState> {
                                         </div>
                                       )}
                                     ></Grid>
-                                    <div className="am-list-item am-input-item am-list-item-middle">
+                                    {/* <div className="am-list-item am-input-item am-list-item-middle">
                                         <div className="am-list-line"><div className="am-input-label am-input-label-7">可兑换为通证数</div>
                                         <div className="am-input-control">{this.state.changeCoin?this.state.changeCoin:("现有通证数：" + (this.state.pageIndexData && this.state.pageIndexData.usable_static)||'0')}
                                         </div></div>
-                                    </div>
+                                    </div> */}
                                 </List>
                                 <WhiteSpace size="lg" />
                                 <WhiteSpace size="lg" />

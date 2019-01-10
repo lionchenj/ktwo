@@ -23,6 +23,7 @@ export namespace model {
         profit: number //昨天收益
         usable_move: number //可提现的动态通证
         activate: number //7天内复投通证
+        activation: number
     }
     
     export interface VethPriceData {
@@ -95,6 +96,9 @@ export namespace model {
         number: string,
         time: string,
         coid_name: string,
+        type: string,
+        plusminus: string,
+        surplus:string
     }
     export interface exreChangeRecordItem {
         status: string,

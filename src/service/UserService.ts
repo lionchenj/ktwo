@@ -116,7 +116,6 @@ export class UserService extends ServiceBase {
     }
 
     public async isSignIn(): Promise<boolean> {
-
         const resp = await this.httpPost("isSignIn")
         return resp.data.status as boolean
     }
@@ -133,14 +132,19 @@ export class UserService extends ServiceBase {
         const resp = await this.httpPost("pageIndex")
         return resp.data as model.PageIndexData
     }
+    //激活卡数量
+    public async activationSetup(): Promise<any> {
+        const resp = await this.httpPost("activationSetup")
+        return resp.data as any
+    }
     //静态钱包
     public async staticWallet(): Promise<boolean> {
         return await this.httpPost("staticWallet")
     }
     //静态复投
-    public async activate_static( number: string,gesture_password:string,service:number): Promise<void> {
+    public async activate_static( id: string,gesture_password:string,service:number): Promise<void> {
         const params = {
-            number:number,
+            number:id,
             gesture_password:gesture_password,
             // activation_code:activation_code,
             service:service
@@ -175,11 +179,11 @@ export class UserService extends ServiceBase {
         return await this.httpPost("activate_move", params, true)
     }
     //动态提现
-    public async assets_move(coin_id:string, coin_number:string, number: string,gesture_password:string, address:string, service:number): Promise<void> {
+    public async assets_move(coin_id:string, coin_number:string, id: string,gesture_password:string, address:string, service:number): Promise<void> {
         const params = {
             coin_id:coin_id,
             coin_number:coin_number,
-            number:number,
+            number:id,
             gesture_password:gesture_password,
             address:address,
             service:service
@@ -269,11 +273,11 @@ export class UserService extends ServiceBase {
         return await this.httpPost("giveOut", params)
     }
     //币兑换
-    public async exchange(coinId: string, code: string, number?: string, coin_number?: string): Promise<void> {
+    public async exchange(coinId: string, code: string, id: string, coin_number?: string): Promise<void> {
         const params = {
             coin_id: coinId,
             coin_number: coin_number,
-            number:number,
+            number:id,
             gesture_password: code,
             // activation_code: activation_code
         }
@@ -355,6 +359,23 @@ export class UserService extends ServiceBase {
         }
         return await this.httpPost("gesture_password", params)
     }
+    //转出激活卡
+    public async activationTransfer(number:string, mobile:string, gesture_password: string): Promise<void> {
+        const params = {
+            number: number,
+            mobile: mobile,
+            gesture_password: gesture_password
+        }
+        return await this.httpPost("activationTransfer", params, true)
+    }
+    //激活卡记录
+    public async activationRecord(page:number): Promise<void> {
+        const params = {
+            page,
+            limit:10
+        }
+        return await this.httpPost("activationRecord",params,true)
+    }
 //修改交易密码
 public async loginGesturePassword(gesture_password:string, password:string, repassword:string): Promise<void> {
     const params = {
@@ -402,7 +423,6 @@ public async forgetGesturePassword( verification_code:string, password:string, r
     //充币
     public async deposit(code: string, number: string, photo: File): Promise<void>{
         const photoPath = await this.uploadFile(photo)
-
         const params = {
             verification_code: code,
             number: number,

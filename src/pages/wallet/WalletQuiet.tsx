@@ -34,29 +34,14 @@ interface WalletQuietState {
     isTP:boolean,
     ftNumber:string,
     address: string,
+    activation:string,
+    exChangeAmount:any
 }
 const tabs = [
     { title: '静态通证' },
     { title: '复投' },
     { title: '提现申请' },
 ];
-const exChangeAmount = [
-    {
-    text:'1000'
-    },{
-    text:'3000'
-    },{
-    text:'5000'
-    },{
-    text:'10000'
-    },{
-    text:'20000'
-    },{
-    text:'30000'
-    },{
-    text:'50000'
-    }
-]
 // const CustomChildren = (props: any) => (
 //     <div style={{ backgroundColor: '#fff', paddingLeft: 15 }}>
 //         <div className="test" style={{ display: 'flex', height: '45px', lineHeight: '45px' }}>
@@ -76,6 +61,7 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
     bankName: string
     bankId: string
     address: string
+    id: string
     constructor(props: WalletQuietProps) {
         super(props)
         this.codeCountDownTimer = 0
@@ -99,7 +85,9 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
             assets_static_max:'0',
             isTP:true,
             ftNumber:'0',
-            address: ''
+            activation:'0',
+            address: '',
+            exChangeAmount:[],
         }
     }
 
@@ -139,7 +127,7 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
     // }
     onActivate = () => {
         UIUtil.showLoading("复投中");
-        UserService.Instance.activate_static(this.state.ftNumber, this.gesturePasswords, this.state.service).then(() => {
+        UserService.Instance.activate_static(this.id, this.gesturePasswords, this.state.service).then(() => {
             UIUtil.hideLoading();
             Modal.alert('提示', '再种成功', [{
                 text: 'ok', onPress: () => {
@@ -277,8 +265,20 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
         })
     }
     setUsable = (e:any) =>{
-        console.log(e)
+        let data = this.state.exChangeAmount;
+        let activation = '';
+        data.map((res:any)=>{
+            if(res.text == e.target.innerText){
+                activation = res.activation;
+                this.id = res.id;
+                res.isclick = true;
+            }else{
+                res.isclick = false;
+            }
+        })
         this.setState({
+            exChangeAmount: data,
+            activation:activation,
             ftNumber : e.target.innerText
         })
     }
@@ -286,6 +286,15 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
         UserService.Instance.pageIndex().then(pageIndexData => {
             this.setState({
                 pageIndexData: pageIndexData
+            })
+        })
+        UserService.Instance.activationSetup().then(data => {
+            let exChangeAmount:any = [];
+            data.map( (res:any) => {
+                exChangeAmount.push({text:res.number,isclick:false,id:res.id,activation:res.activation,status:res.status})
+            })
+            this.setState({
+                exChangeAmount: exChangeAmount
             })
         })
         UserService.Instance.staticWallet().then((res:any) => {
@@ -379,16 +388,21 @@ export class WalletQuiet extends React.Component<WalletQuietProps, WalletQuietSt
                                 <div className="am-input-control">{this.state.ftNumber}
                                 </div></div>
                             </div>
-                            <Grid className="exchange" square={false} data={exChangeAmount} hasLine={false}  columnNum={4}
+                            <div className="am-list-item am-input-item am-list-item-middle">
+                                <div className="am-list-line"><div className="am-input-label am-input-label-7">需要激活卡</div>
+                                <div className="am-input-control">{this.state.activation?(this.state.activation + "个"):"0个"}
+                                </div></div>
+                            </div>
+                            <Grid className="exchange" square={false} data={this.state.exChangeAmount} hasLine={false}  columnNum={4}
                                 renderItem={(dataItem:any) => (
                                     <div style={{margin: "0 .1rem"}}>
                                         {
-                                        dataItem.text>10000?
+                                        dataItem.status == '0'?
                                         <div style={{ textAlign:'center', padding: '.08rem 0.1rem', borderRadius: '.05rem', color: '#D1D1D1', fontSize: '14px', marginTop: '12px',border: '1px solid #D1D1D1' }}>
                                             {dataItem.text}
                                         </div>
                                         :
-                                        <div onClick={this.setUsable} style={{ textAlign:'center', padding: '.08rem 0.1rem', borderRadius: '.05rem', color: '#4A90E2', fontSize: '14px', marginTop: '12px',border: '1px solid #4A90E2' }}>
+                                        <div onClick={this.setUsable} style={{textAlign:'center', padding: '.08rem 0.1rem', borderRadius: '.05rem', backgroundColor: dataItem.isclick?'#4A90E2':'#fff', color: dataItem.isclick?'#fff':'#4A90E2', fontSize: '14px', marginTop: '12px',border: '1px solid #4A90E2' }}>
                                             {dataItem.text}
                                         </div>
                                     }

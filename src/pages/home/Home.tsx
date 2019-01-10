@@ -688,6 +688,9 @@ export class Home extends React.Component<HomeProps, HomeState> {
                                             <div className="home-top-item fs-26"> 
                                                 <div className="home-top-title">在投通证</div><div className="home-top-num">{this.state.pageIndexData && this.state.pageIndexData.lock}</div>
                                             </div>
+                                            <div className="home-top-item fs-22" onClick={()=>{this.props.history.push("/activation")}}> 
+                                                <div className="home-top-title">激活卡数量</div><div className="home-top-num">{this.state.pageIndexData && this.state.pageIndexData.activation}</div>
+                                            </div>
                                             <div className="home-top-item fs-22"> 
                                                 <div className="home-top-title">昨日收益</div><div className="home-top-num">{this.state.pageIndexData && this.state.pageIndexData.profit}</div>
                                             </div>
